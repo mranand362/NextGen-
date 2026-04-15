@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <url>
-    <loc>https://nextgenitsolution.vercel.app/</loc>
-  </url>
+  <url><loc>https://nextgenitsolution.vercel.app/</loc></url>
+
+  <url><loc>https://nextgenitsolution.vercel.app/services/web-development</loc></url>
+  <url><loc>https://nextgenitsolution.vercel.app/services/ecommerce</loc></url>
+  <url><loc>https://nextgenitsolution.vercel.app/services/custom-software</loc></url>
+  <url><loc>https://nextgenitsolution.vercel.app/services/api-development</loc></url>
+  <url><loc>https://nextgenitsolution.vercel.app/services/ui-ux-design</loc></url>
+  <url><loc>https://nextgenitsolution.vercel.app/services/landing-pages</loc></url>
+  <url><loc>https://nextgenitsolution.vercel.app/services/redesign</loc></url>
+  <url><loc>https://nextgenitsolution.vercel.app/services/ats-resume</loc></url>
+  <url><loc>https://nextgenitsolution.vercel.app/services/portfolio</loc></url>
+  <url><loc>https://nextgenitsolution.vercel.app/services/projects</loc></url>
+  <url><loc>https://nextgenitsolution.vercel.app/services/maintenance</loc></url>
+  <url><loc>https://nextgenitsolution.vercel.app/services/performance</loc></url>
 
 </urlset>
