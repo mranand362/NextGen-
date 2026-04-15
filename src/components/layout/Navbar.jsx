@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ Add this import
 import {
   Menu,
   X,
@@ -137,7 +138,7 @@ const NAV_LINKS = [
 ];
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   🚨 FIX 2 & 3: PROFESSIONAL SCROLL HANDLER + NO VIBRATION
+   PROFESSIONAL SCROLL HANDLER
    ═══════════════════════════════════════════════════════════════════════════ */
 const scrollToElement = (href, setMobileOpen = null) => {
   if (!href || !href.startsWith("#")) {
@@ -151,7 +152,6 @@ const scrollToElement = (href, setMobileOpen = null) => {
     return false;
   }
 
-  // 🚨 FIX 2: Improved offset calculation (no vibration)
   const yOffset = -(CONFIG.NAVBAR_HEIGHT + CONFIG.TOP_BAR_HEIGHT - 5);
   const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
   
@@ -179,11 +179,10 @@ const debounce = (fn, delay = 100) => {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   🚨 FIX 3: IMPROVED SCROLL LOCK (NO ANDROID VIBRATION)
+   IMPROVED SCROLL LOCK (NO ANDROID VIBRATION)
    ═══════════════════════════════════════════════════════════════════════════ */
 const preventBodyScroll = (lock) => {
   if (lock) {
-    // Simple overflow hidden - no position fixed (prevents Android vibration)
     document.body.style.overflow = "hidden";
   } else {
     document.body.style.overflow = "";
@@ -360,7 +359,6 @@ const NavLink = ({ label, href, isActive, delay, onClick }) => {
   const handleClick = useCallback(
     (e) => {
       e.preventDefault();
-      // 🚨 FIX 6: Prevent double execution
       if (onClick) onClick();
       scrollToElement(href);
     },
@@ -411,12 +409,13 @@ const NavLink = ({ label, href, isActive, delay, onClick }) => {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SERVICES DROPDOWN - FIXED STUCK STATE
+   SERVICES DROPDOWN - WITH REACT ROUTER NAVIGATION
    ═══════════════════════════════════════════════════════════════════════════ */
 const ServicesDropdown = ({ isActive, onClick, delay }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
+  const navigate = useNavigate(); // ✅ Add navigate hook
 
   const closeDropdown = useCallback(() => {
     setIsOpen(false);
@@ -455,18 +454,17 @@ const ServicesDropdown = ({ isActive, onClick, delay }) => {
     };
   }, [isOpen, closeDropdown]);
 
-  // 🚨 FIX 4: Improved navigation (can be upgraded to React Router)
+  // ✅ FIXED: React Router navigation (no page reload)
   const handleServiceClick = useCallback(
     (e, link) => {
       e.preventDefault();
       e.stopPropagation();
       closeDropdown();
-      // For React Router, replace with: navigate(link);
       setTimeout(() => {
-        window.location.href = link;
-      }, 150);
+        navigate(link); // ✅ React Router navigation
+      }, 100);
     },
-    [closeDropdown]
+    [closeDropdown, navigate]
   );
 
   const handleContactClick = useCallback(
@@ -476,7 +474,7 @@ const ServicesDropdown = ({ isActive, onClick, delay }) => {
       closeDropdown();
       setTimeout(() => {
         scrollToElement("#contact");
-      }, 150);
+      }, 100);
     },
     [closeDropdown]
   );
@@ -692,19 +690,20 @@ const ServicesDropdown = ({ isActive, onClick, delay }) => {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   MOBILE SERVICES SECTION
+   MOBILE SERVICES SECTION - WITH REACT ROUTER NAVIGATION
    ═══════════════════════════════════════════════════════════════════════════ */
 const MobileServicesSection = ({ delay, activeSection, onServiceClick }) => {
   const [openCategory, setOpenCategory] = useState(null);
+  const navigate = useNavigate(); // ✅ Add navigate hook
 
   const toggleCategory = () => {
     setOpenCategory(openCategory === "services" ? null : "services");
   };
 
+  // ✅ FIXED: React Router navigation (no page reload)
   const handleServiceClick = (e, link) => {
     e.preventDefault();
-    // For React Router, replace with: navigate(link);
-    window.location.href = link;
+    navigate(link); // ✅ React Router navigation
     onServiceClick?.();
   };
 
@@ -1179,7 +1178,7 @@ const TopBar = ({ mounted }) => {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   MAIN NAVBAR COMPONENT - FULLY RESPONSIVE WITH ALL FIXES
+   MAIN NAVBAR COMPONENT - FULLY RESPONSIVE WITH REACT ROUTER
    ═══════════════════════════════════════════════════════════════════════════ */
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -1204,7 +1203,7 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 🚨 FIX 5: Improved IntersectionObserver with better threshold
+  // Improved IntersectionObserver with better threshold
   useEffect(() => {
     const ids = [...NAV_LINKS.map((l) => l.href.slice(1)), "services"];
 
@@ -1218,7 +1217,7 @@ const Navbar = () => {
       },
       { 
         rootMargin: CONFIG.OBSERVER_ROOT_MARGIN, 
-        threshold: 0.3 // 🚨 FIX 5: Better threshold for stable highlighting
+        threshold: 0.3
       }
     );
 
@@ -1230,7 +1229,7 @@ const Navbar = () => {
     return () => observerRef.current?.disconnect();
   }, []);
 
-  // 🚨 FIX 3: Mobile scroll lock with improved method (no vibration)
+  // Mobile scroll lock with improved method (no vibration)
   useEffect(() => {
     if (mobileOpen) {
       preventBodyScroll(true);
