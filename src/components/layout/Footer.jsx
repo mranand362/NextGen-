@@ -4,7 +4,6 @@ import {
   Mail,
   MapPin,
   Clock,
-  Send,
   CheckCircle,
   ChevronRight,
   Sparkles,
@@ -22,6 +21,8 @@ import {
   FaYoutube,
   FaDribbble,
 } from "react-icons/fa";
+
+import logo from "../../assets/logo.png";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    DESIGN TOKENS (Matching Navbar & Hero)
@@ -172,223 +173,35 @@ const FooterKeyframes = () => (
 );
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   NEWSLETTER SUBSCRIPTION
+   LOGO COMPONENT
    ═══════════════════════════════════════════════════════════════════════════ */
-const NewsletterSection = () => {
-  const [email, setEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!email || !email.includes("@")) {
-      setError("Please enter a valid email address");
-      return;
-    }
-
-    setIsLoading(true);
-    setError("");
-
-    setTimeout(() => {
-      setIsLoading(false);
-      setSubscribed(true);
-      setEmail("");
-      setTimeout(() => setSubscribed(false), 3000);
-    }, 1000);
-  };
-
+const Logo = ({ compact = false }) => {
   return (
-    <div
-      style={{
-        background: `linear-gradient(135deg, ${B.blue[50]} 0%, ${B.blue[100]} 100%)`,
-        borderRadius: B.r["2xl"],
-        padding: "clamp(24px, 4vw, 32px)",
-        marginBottom: "clamp(32px, 5vw, 48px)",
-        border: `1px solid ${B.blue[200]}50`,
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      <div
-        aria-hidden="true"
+    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+      <img 
+        src={logo} 
+        alt="NextGen IT Logo" 
         style={{
-          position: "absolute",
-          top: "-30%",
-          right: "-10%",
-          width: "250px",
-          height: "250px",
-          borderRadius: "50%",
-          background: `radial-gradient(circle, ${B.blue[400]}15, transparent)`,
-          animation: "fGlow 8s ease-in-out infinite",
+          height: compact ? "28px" : "36px",
+          width: "auto",
+          objectFit: "contain",
         }}
       />
-      <div
-        aria-hidden="true"
+      <span
         style={{
-          position: "absolute",
-          bottom: "-30%",
-          left: "-10%",
-          width: "200px",
-          height: "200px",
-          borderRadius: "50%",
-          background: `radial-gradient(circle, ${B.emerald[400]}10, transparent)`,
-          animation: "fGlow 10s ease-in-out infinite reverse",
+          fontSize: compact 
+            ? "clamp(14px, 4vw, 17px)" 
+            : "clamp(16px, 4vw, 20px)",
+          fontWeight: 900,
+          fontFamily: "'Syne', sans-serif",
+          letterSpacing: "-0.03em",
+          color: B.text1,
+          transition: "color 0.2s ease",
+          whiteSpace: "nowrap",
         }}
-      />
-
-      <div style={{ position: "relative", zIndex: 1 }}>
-        <div style={{ marginBottom: "16px" }}>
-          <span
-            style={{
-              display: "inline-block",
-              padding: "4px 12px",
-              background: `${B.blue[500]}10`,
-              borderRadius: B.r.full,
-              fontSize: "11px",
-              fontWeight: 600,
-              color: B.blue[600],
-              fontFamily: "'DM Sans', sans-serif",
-              letterSpacing: "0.05em",
-              marginBottom: "12px",
-            }}
-          >
-            📧 STAY UPDATED
-          </span>
-        </div>
-        <h3
-          style={{
-            fontSize: "clamp(20px, 3vw, 24px)",
-            fontWeight: 700,
-            color: B.text1,
-            marginBottom: "8px",
-            fontFamily: "'Syne', sans-serif",
-          }}
-        >
-          Subscribe to Our Newsletter
-        </h3>
-        <p
-          style={{
-            fontSize: "clamp(13px, 2vw, 14px)",
-            color: B.text3,
-            marginBottom: "24px",
-            fontFamily: "'DM Sans', sans-serif",
-            maxWidth: "500px",
-          }}
-        >
-          Get the latest insights, trends, and updates delivered to your inbox. No spam, unsubscribe anytime.
-        </p>
-
-        <form onSubmit={handleSubmit} style={{ maxWidth: "500px" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email address"
-                disabled={isLoading}
-                style={{
-                  flex: 1,
-                  padding: "14px 18px",
-                  borderRadius: B.r.lg,
-                  border: `1px solid ${B.blue[200]}60`,
-                  background: B.white,
-                  fontSize: "14px",
-                  fontFamily: "'DM Sans', sans-serif",
-                  color: B.text2,
-                  outline: "none",
-                  transition: B.transition.default,
-                  minWidth: "200px",
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.borderColor = B.blue[500];
-                  e.currentTarget.style.boxShadow = `0 0 0 3px ${B.blue[500]}20`;
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.borderColor = `${B.blue[200]}60`;
-                  e.currentTarget.style.boxShadow = "none";
-                }}
-              />
-              <button
-                type="submit"
-                disabled={isLoading}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  padding: "14px 32px",
-                  borderRadius: B.r.lg,
-                  background: `linear-gradient(135deg, ${B.blue[500]}, ${B.blue[700]})`,
-                  color: B.white,
-                  fontSize: "14px",
-                  fontWeight: 600,
-                  fontFamily: "'DM Sans', sans-serif",
-                  border: "none",
-                  cursor: "pointer",
-                  transition: B.transition.default,
-                  whiteSpace: "nowrap",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                  e.currentTarget.style.boxShadow = B.shadow.md;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "none";
-                  e.currentTarget.style.boxShadow = "none";
-                }}
-              >
-                {isLoading ? (
-                  <>
-                    <span style={{ animation: "fPulse 1s ease-in-out infinite" }}>●</span>
-                    Subscribing...
-                  </>
-                ) : (
-                  <>
-                    Subscribe <Send size={16} />
-                  </>
-                )}
-              </button>
-            </div>
-            {error && (
-              <p
-                style={{
-                  fontSize: "12px",
-                  color: "#EF4444",
-                  marginTop: "8px",
-                }}
-              >
-                {error}
-              </p>
-            )}
-            {subscribed && (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  padding: "10px 16px",
-                  background: `${B.emerald[500]}10`,
-                  borderRadius: B.r.lg,
-                  border: `1px solid ${B.emerald[500]}20`,
-                  animation: "fFadeUp 0.3s ease",
-                }}
-              >
-                <CheckCircle size={16} color={B.emerald[500]} />
-                <span
-                  style={{
-                    fontSize: "13px",
-                    color: B.emerald[500],
-                    fontFamily: "'DM Sans', sans-serif",
-                  }}
-                >
-                  Thanks for subscribing! Check your inbox for confirmation.
-                </span>
-              </div>
-            )}
-          </div>
-        </form>
-      </div>
+      >
+        NextGen
+      </span>
     </div>
   );
 };
@@ -884,9 +697,6 @@ const Footer = () => {
             padding: "clamp(48px, 8vh, 64px) clamp(16px, 5vw, 24px) clamp(24px, 4vh, 32px)",
           }}
         >
-          {/* Newsletter Section */}
-          <NewsletterSection />
-
           {/* Main Footer Grid */}
           <div
             style={{
@@ -907,21 +717,7 @@ const Footer = () => {
               className="footer-brand"
             >
               <div style={{ marginBottom: "20px" }}>
-                <h2
-                  style={{
-                    fontSize: "clamp(24px, 4vw, 28px)",
-                    fontWeight: 900,
-                    fontFamily: "'Syne', sans-serif",
-                    letterSpacing: "-0.03em",
-                    background: `linear-gradient(135deg, ${B.blue[600]}, ${B.blue[800]})`,
-                    backgroundClip: "text",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    marginBottom: "12px",
-                  }}
-                >
-                  NextGen IT
-                </h2>
+                <Logo />
                 <p
                   style={{
                     fontSize: "clamp(13px, 2vw, 14px)",
@@ -929,6 +725,7 @@ const Footer = () => {
                     fontFamily: "'DM Sans', sans-serif",
                     lineHeight: 1.6,
                     maxWidth: "100%",
+                    marginTop: "16px",
                     marginBottom: "20px",
                   }}
                 >
