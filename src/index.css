@@ -1,4 +1,18 @@
 @import "tailwindcss";
-html {
+/* ✅ FIX 3: Ensure all sections have proper scroll-margin */
+section,
+#hero,
+#services,
+#work,
+#contact,
+#insights {
+  scroll-margin-top: 110px; /* Matches navbar + top bar height */
   scroll-behavior: smooth;
+}
+
+/* Optional: Improve scroll behavior */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }

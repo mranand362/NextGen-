@@ -198,39 +198,50 @@ const IconTwitter = ({ size = 20, color = "currentColor", ...props }) => (
 );
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   CONFIGURATION
+   CONFIGURATION - UPDATED FOR INDIAN MARKET 🇮🇳
    ═══════════════════════════════════════════════════════════════════════════ */
 
+// ✅ STEP 2 & 3: Updated Contact Methods with proper Indian format + WhatsApp
 const CONTACT_METHODS = [
   {
     id: "email",
     icon: Mail,
     label: "Email",
-    value: "hello@enterprise.com",
-    href: "mailto:hello@enterprise.com",
+    value: "nextgenit@gmail.com",
+    href: "mailto:nextgenit@gmail.com",
     color: DESIGN_SYSTEM.colors.primary[500],
     backgroundColor: DESIGN_SYSTEM.colors.primary[50],
-    description: "Our average response time is 4 hours",
+    description: "Response within 4–6 hours",
   },
   {
     id: "phone",
     icon: Phone,
-    label: "Phone",
-    value: "+1 (555) 123-4567",
-    href: "tel:+15551234567",
+    label: "Call / WhatsApp",
+    value: "+91 9263066325",
+    href: "tel:+919263066325",
     color: DESIGN_SYSTEM.colors.semantic.info.base,
     backgroundColor: DESIGN_SYSTEM.colors.semantic.info.light,
-    description: "Mon-Fri, 9AM-6PM PST",
+    description: "Mon-Sat, 9AM-7PM IST", // ✅ STEP 5: IST Timezone
+  },
+  {
+    id: "whatsapp", // ✅ STEP 3: NEW WhatsApp contact method (Most important for India)
+    icon: MessageSquare,
+    label: "WhatsApp",
+    value: "+91 9263066325",
+    href: "https://wa.me/919263066325?text=Hi%20NextGen%2C%20I%20want%20to%20discuss%20a%20project", // ✅ STEP 8: Pre-filled message
+    color: "#25D366",
+    backgroundColor: "#E7F9EF",
+    description: "Instant replies on WhatsApp",
   },
   {
     id: "location",
     icon: MapPin,
     label: "Office",
-    value: "San Francisco, CA",
-    href: "https://maps.google.com",
+    value: "Modinagar, New Delhi NCR",
+    href: "https://maps.google.com/?q=Modinagar+New+Delhi",
     color: DESIGN_SYSTEM.colors.semantic.warning.base,
     backgroundColor: DESIGN_SYSTEM.colors.semantic.warning.light,
-    description: "Global remote team",
+    description: "Global remote team available",
   },
 ];
 
@@ -239,25 +250,26 @@ const SOCIAL_LINKS = [
     id: "github",
     icon: IconGithub,
     label: "GitHub",
-    href: "https://github.com/enterprise",
+    href: "https://github.com/nextgenindia",
     ariaLabel: "Visit our GitHub organization",
   },
   {
     id: "linkedin",
     icon: IconLinkedin,
     label: "LinkedIn",
-    href: "https://linkedin.com/company/enterprise",
+    href: "https://linkedin.com/company/nextgenindia",
     ariaLabel: "Connect with us on LinkedIn",
   },
   {
     id: "twitter",
     icon: IconTwitter,
     label: "Twitter",
-    href: "https://twitter.com/enterprise",
+    href: "https://twitter.com/nextgenindia",
     ariaLabel: "Follow us on Twitter",
   },
 ];
 
+// ✅ STEP 1 & 6: Updated Form Fields with proper Indian phone validation
 const FORM_FIELDS = [
   {
     id: "name",
@@ -265,11 +277,12 @@ const FORM_FIELDS = [
     type: "text",
     required: true,
     autoComplete: "name",
-    placeholder: "John Doe",
+    placeholder: "Rahul Sharma",
     validation: (value) => {
       if (!value.trim()) return "Name is required";
       if (value.trim().length < 2) return "Name must be at least 2 characters";
       if (value.trim().length > 50) return "Name must not exceed 50 characters";
+      if (!/^[a-zA-Z\s\-\.]+$/.test(value.trim())) return "Name should only contain letters, spaces, hyphens, and dots";
       return null;
     },
   },
@@ -279,7 +292,7 @@ const FORM_FIELDS = [
     type: "email",
     required: true,
     autoComplete: "email",
-    placeholder: "john@company.com",
+    placeholder: "rahul@example.com",
     validation: (value) => {
       if (!value.trim()) return "Email is required";
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -288,14 +301,19 @@ const FORM_FIELDS = [
     },
   },
   {
-    id: "phone",
-    label: "Phone Number (Optional)",
-    type: "tel",
+    id: "phone", // ✅ STEP 1: Fixed phone field with Indian format validation
+    label: "Phone Number",
+    type: "tel", // ✅ STEP 6: Fixed type from "call" to "tel"
     required: false,
     autoComplete: "tel",
-    placeholder: "+1 (555) 000-0000",
+    placeholder: "+91 9876543210",
     validation: (value) => {
-      if (value && value.trim().length < 10) return "Please enter a valid phone number";
+      if (!value) return null;
+      // Indian phone number regex: +91 optional, then 10 digits starting with 6-9
+      const indianPhoneRegex = /^(\+91[\-\s]?)?[6-9]\d{9}$/;
+      if (!indianPhoneRegex.test(value.trim())) {
+        return "Enter valid Indian number (+91 XXXXX XXXXX)";
+      }
       return null;
     },
   },
@@ -305,7 +323,7 @@ const FORM_FIELDS = [
     type: "text",
     required: true,
     autoComplete: "off",
-    placeholder: "Project inquiry",
+    placeholder: "Website Development Project",
     validation: (value) => {
       if (!value.trim()) return "Subject is required";
       if (value.trim().length < 3) return "Subject must be at least 3 characters";
@@ -319,7 +337,7 @@ const FORM_FIELDS = [
     type: "textarea",
     required: true,
     autoComplete: "off",
-    placeholder: "Tell us about your project...",
+    placeholder: "Tell us about your project requirements...",
     rows: 6,
     validation: (value) => {
       if (!value.trim()) return "Message is required";
@@ -1271,13 +1289,15 @@ const Contact = () => {
                   )}
                 </button>
 
+                {/* ✅ STEP 7: India Trust Feature - Privacy Notice */}
                 <p style={{
                   fontSize: DESIGN_SYSTEM.typography.fontSize.xs[0],
                   color: DESIGN_SYSTEM.colors.neutral[500],
                   textAlign: "center",
                   margin: 0,
+                  marginTop: DESIGN_SYSTEM.spacing[2],
                 }}>
-                  We'll get back to you within 24 hours
+                  🔒 We respect your privacy. Do not share Aadhaar, PAN or sensitive data.
                 </p>
               </form>
             </div>

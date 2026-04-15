@@ -8,18 +8,18 @@ import Insights from "./components/layout/Insights";
 import Footer from "./components/layout/Footer";
 
 // Import all service pages
-import WebDevelopment from "./pages/WebDevelopment";
-import Ecommerce from "./pages/Ecommerce";
-import CustomSoftware from "./pages/CustomSoftware";
-import APIDevelopment from "./pages/APIDevelopment";
-import UIUXDesign from "./pages/UIUXDesign";
-import LandingPages from "./pages/LandingPages";
-import WebsiteRedesign from "./pages/WebsiteRedesign";
-import ATSResume from "./pages/ATSResume";
-import PortfolioWebsite from "./pages/PortfolioWebsite";
-import CollegeProjects from "./pages/CollegeProjects";
-import Maintenance from "./pages/Maintenance";
-import Performance from "./pages/Performance";
+import WebDevelopment from "./pages/services/WebDevelopment";
+import Ecommerce from "./pages/services/Ecommerce";
+import CustomSoftware from "./pages/services/CustomSoftware";
+import APIDevelopment from "./pages/services/APIDevelopment";
+import UIUXDesign from "./pages/services/UIUXDesign";
+import LandingPages from "./pages/services/LandingPages";
+import WebsiteRedesign from "./pages/services/WebsiteRedesign";
+import ATSResume from "./pages/services/ATSResume";
+import PortfolioWebsite from "./pages/services/PortfolioWebsite";
+import CollegeProjects from "./pages/services/CollegeProjects";
+import Maintenance from "./pages/services/Maintenance";
+import Performance from "./pages/services/Performance";
 
 function App() {
   return (
