@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  ArrowRight,
   Phone,
   Mail,
   MapPin,
@@ -47,8 +46,8 @@ const B = {
     800: "#1E40AF",
     900: "#1E3A5F",
   },
-  emerald: { 400: "#34D399", 500: "#10B981" },
-  amber: { 400: "#FBBF24", 500: "#F59E0B" },
+  emerald: { 400: "#34D399", 500: "#10B981", 600: "#059669" },
+  amber: { 400: "#FBBF24", 500: "#F59E0B", 600: "#D97706" },
   r: {
     xs: "6px",
     sm: "8px",
@@ -126,10 +125,10 @@ const QUICK_LINKS = [
 ];
 
 const TRUST_BADGES = [
-  { icon: Shield, label: "SSL Secure", color: B.emerald[500] },
-  { icon: Award, label: "Award Winning", color: B.amber[500] },
-  { icon: Zap, label: "24/7 Support", color: B.blue[500] },
-  { icon: Sparkles, label: "100% Satisfaction", color: B.emerald[500] },
+  { icon: Shield, label: "SSL Secure", color: "#10B981" },
+  { icon: Award, label: "Award Winning", color: "#F59E0B" },
+  { icon: Zap, label: "24/7 Support", color: "#3B82F6" },
+  { icon: Sparkles, label: "100% Satisfaction", color: "#10B981" },
 ];
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -157,10 +156,6 @@ const FooterKeyframes = () => (
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-5px); }
     }
-    @keyframes fShimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
     @keyframes fPulse {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.5; }
@@ -173,23 +168,11 @@ const FooterKeyframes = () => (
         transition-duration: 0.01ms !important;
       }
     }
-
-    /* Mobile Optimizations */
-    @media (max-width: 768px) {
-      .footer-grid-mobile {
-        display: grid !important;
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 32px !important;
-      }
-      .footer-column-full {
-        grid-column: span 2 !important;
-      }
-    }
   `}</style>
 );
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   NEWSLETTER SUBSCRIPTION (Enhanced)
+   NEWSLETTER SUBSCRIPTION
    ═══════════════════════════════════════════════════════════════════════════ */
 const NewsletterSection = () => {
   const [email, setEmail] = useState("");
@@ -207,7 +190,6 @@ const NewsletterSection = () => {
     setIsLoading(true);
     setError("");
 
-    // Simulate API call - Replace with actual API endpoint
     setTimeout(() => {
       setIsLoading(false);
       setSubscribed(true);
@@ -412,9 +394,9 @@ const NewsletterSection = () => {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   FOOTER LINK COLUMN (Enhanced with badges)
+   FOOTER LINK COLUMN
    ═══════════════════════════════════════════════════════════════════════════ */
-const FooterColumn = ({ title, links, delay, isCompact = false }) => {
+const FooterColumn = ({ title, links, delay }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   return (
@@ -533,13 +515,13 @@ const FooterColumn = ({ title, links, delay, isCompact = false }) => {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SOCIAL LINKS (Enhanced with follower counts)
+   SOCIAL LINKS
    ═══════════════════════════════════════════════════════════════════════════ */
 const SocialLinks = () => {
   const [rippleIndex, setRippleIndex] = useState(null);
   const [hoveredSocial, setHoveredSocial] = useState(null);
 
-  const handleSocialClick = (e, href, label) => {
+  const handleSocialClick = (e, href) => {
     e.preventDefault();
     window.open(href, "_blank", "noopener,noreferrer");
   };
@@ -561,7 +543,7 @@ const SocialLinks = () => {
             <a
               key={social.label}
               href={social.href}
-              onClick={(e) => handleSocialClick(e, social.href, social.label)}
+              onClick={(e) => handleSocialClick(e, social.href)}
               style={{
                 position: "relative",
                 display: "flex",
@@ -672,7 +654,7 @@ const TrustBadges = () => {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   CONTACT INFO (Enhanced)
+   CONTACT INFO
    ═══════════════════════════════════════════════════════════════════════════ */
 const ContactInfo = () => {
   const CONTACT = {
@@ -793,7 +775,7 @@ const ContactInfo = () => {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   QUICK LINKS (Mobile)
+   QUICK LINKS
    ═══════════════════════════════════════════════════════════════════════════ */
 const QuickLinks = () => {
   const scrollToElement = (href) => {
@@ -820,7 +802,7 @@ const QuickLinks = () => {
         marginBottom: "24px",
       }}
     >
-      {QUICK_LINKS.map((link, idx) => (
+      {QUICK_LINKS.map((link) => (
         <a
           key={link.label}
           href={link.href}
@@ -852,7 +834,7 @@ const QuickLinks = () => {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   MAIN FOOTER COMPONENT (with 2-column mobile layout)
+   MAIN FOOTER COMPONENT
    ═══════════════════════════════════════════════════════════════════════════ */
 const Footer = () => {
   const [mounted, setMounted] = useState(false);
@@ -899,29 +881,30 @@ const Footer = () => {
             zIndex: 1,
             maxWidth: "1320px",
             margin: "0 auto",
-            padding: "clamp(48px, 8vh, 64px) 1.5rem clamp(24px, 4vh, 32px)",
+            padding: "clamp(48px, 8vh, 64px) clamp(16px, 5vw, 24px) clamp(24px, 4vh, 32px)",
           }}
         >
           {/* Newsletter Section */}
           <NewsletterSection />
 
-          {/* Main Footer Grid - 2 columns on mobile, 5 columns on desktop */}
+          {/* Main Footer Grid */}
           <div
-            className="footer-grid-mobile"
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(5, 1fr)",
               gap: "clamp(32px, 5vw, 48px)",
               marginBottom: "clamp(40px, 6vh, 60px)",
             }}
+            className="footer-grid"
           >
-            {/* Brand Column - Full width on mobile */}
+            {/* Brand Column */}
             <div
-              className="footer-column-full"
               style={{
+                gridColumn: "span 1",
                 opacity: 0,
                 animation: `fFadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0ms both`,
               }}
+              className="footer-brand"
             >
               <div style={{ marginBottom: "20px" }}>
                 <h2
@@ -956,11 +939,15 @@ const Footer = () => {
               <TrustBadges />
             </div>
 
-            {/* Footer Columns - Will stack in 2 columns on mobile */}
+            {/* Footer Columns */}
             <FooterColumn title="Company" links={FOOTER_LINKS.company} delay={100} />
             <FooterColumn title="Services" links={FOOTER_LINKS.services} delay={150} />
             <FooterColumn title="Support" links={FOOTER_LINKS.support} delay={200} />
             <FooterColumn title="Resources" links={FOOTER_LINKS.resources} delay={250} />
+          </div>
+
+          {/* Contact Info - Below grid on desktop, integrated on mobile via CSS */}
+          <div style={{ marginBottom: "clamp(32px, 5vw, 48px)" }} className="footer-contact">
             <ContactInfo />
           </div>
 
@@ -1060,36 +1047,46 @@ const Footer = () => {
         </div>
       </footer>
 
-      {/* Mobile Responsive Styles */}
+      {/* Responsive Styles */}
       <style>{`
-        /* Mobile Responsive: 2-column layout */
+        /* Tablet and Mobile Responsive */
         @media (max-width: 1024px) {
-          .footer-grid-mobile {
+          .footer-grid {
             grid-template-columns: repeat(2, 1fr) !important;
             gap: 32px !important;
           }
-          .footer-column-full {
+          .footer-brand {
             grid-column: span 2 !important;
+          }
+          .footer-contact {
+            display: block !important;
+          }
+        }
+
+        /* Desktop - Hide contact from grid and show separately */
+        @media (min-width: 1025px) {
+          .footer-contact {
+            display: none !important;
           }
         }
 
         /* Tablet Styles */
         @media (min-width: 769px) and (max-width: 1024px) {
-          .footer-grid-mobile {
+          .footer-grid {
             gap: 28px !important;
           }
         }
 
         /* Mobile Styles */
         @media (max-width: 768px) {
-          .footer-grid-mobile {
+          .footer-grid {
             gap: 24px !important;
           }
         }
 
         /* Small Mobile */
         @media (max-width: 480px) {
-          .footer-grid-mobile {
+          .footer-grid {
             gap: 20px !important;
           }
         }
