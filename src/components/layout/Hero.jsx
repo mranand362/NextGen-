@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Code2,
   ArrowRight,
@@ -54,94 +54,6 @@ const B = {
   },
 };
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   EXTRACTED STYLES (Performance Fix #1)
-   ═══════════════════════════════════════════════════════════════════════════ */
-const styles = {
-  // Button styles
-  buttonPrimary: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "10px",
-    padding: "15px 32px",
-    borderRadius: B.r.lg,
-    background: `linear-gradient(135deg, ${B.blue[500]} 0%, ${B.blue[700]} 100%)`,
-    color: "#FFFFFF",
-    fontSize: "14px",
-    fontWeight: 700,
-    textDecoration: "none",
-    fontFamily: "'Syne',sans-serif",
-    letterSpacing: "0.02em",
-    boxShadow: `0 4px 20px ${B.blue[500]}30, 0 1px 3px ${B.blue[800]}20, inset 0 1px 0 rgba(255,255,255,0.2)`,
-    transition: "all 0.3s cubic-bezier(0.22,1,0.36,1)",
-  },
-  buttonSecondary: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "8px",
-    padding: "15px 28px",
-    borderRadius: B.r.lg,
-    background: B.surface,
-    border: `1px solid ${B.blue[200]}60`,
-    color: B.text2,
-    fontSize: "14px",
-    fontWeight: 600,
-    textDecoration: "none",
-    fontFamily: "'DM Sans',sans-serif",
-    boxShadow: B.shadow.sm,
-    transition: "all 0.3s cubic-bezier(0.22,1,0.36,1)",
-  },
-  badge: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "10px",
-    padding: "7px 18px 7px 8px",
-    borderRadius: B.r.full,
-    border: `1px solid ${B.blue[200]}60`,
-    background: `linear-gradient(135deg, ${B.blue[50]}, ${B.surface})`,
-    marginBottom: "clamp(24px,3.5vw,32px)",
-    boxShadow: B.shadow.xs,
-  },
-  // Card styles
-  dashboardCard: {
-    position: "relative",
-    borderRadius: B.r["2xl"],
-    overflow: "hidden",
-    background: B.surface,
-    border: `1px solid ${B.blue[100]}50`,
-    boxShadow: B.shadow.xl,
-  },
-  codeBlock: {
-    padding: "20px 22px",
-    background: "#0F172A",
-    position: "relative",
-  },
-  serviceChip: (color, isActive) => ({
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    padding: "14px 14px",
-    borderRadius: B.r.lg,
-    background: isActive ? `${color}0A` : B.surface,
-    border: `1px solid ${isActive ? `${color}30` : `${B.blue[100]}30`}`,
-    transition: "all 0.4s cubic-bezier(0.22,1,0.36,1)",
-    boxShadow: isActive ? `0 0 0 1px ${color}15, ${B.shadow.sm}` : B.shadow.xs,
-    transform: isActive ? "scale(1.02)" : "scale(1)",
-  }),
-  metricCard: (color, delay = 0) => ({
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: "6px",
-    padding: "16px 10px",
-    borderRadius: B.r.lg,
-    background: B.surface,
-    border: `1px solid ${color}15`,
-    boxShadow: B.shadow.xs,
-    animation: `hFloat 6s ease-in-out infinite ${delay}s`,
-  }),
-};
-
 const SERVICES = [
   { icon: Monitor,  label: "MERN Stack",      sub: "Full-stack web apps",  color: B.blue[500],   bg: B.blue[50] },
   { icon: FileText, label: "ATS Resumes",      sub: "Career-ready CVs",     color: B.amber[500],  bg: "#FFFBEB" },
@@ -172,16 +84,6 @@ const HeroKeyframes = () => (
     @keyframes hBlink{0%,100%{border-color:transparent}50%{border-color:${B.blue[500]}}}
     @keyframes hGlowPulse{0%,100%{opacity:0.4}50%{opacity:0.8}}
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}}
-    
-    /* Responsive improvements */
-    @media(min-width:768px){
-      .hero-grid{grid-template-columns:1fr 1fr!important}
-    }
-    @media(min-width:1024px){
-      .hero-grid{grid-template-columns:1fr 1.1fr!important}
-      .hero-right{display:flex!important}
-      .mobile-visual{display:none!important}
-    }
   `}</style>
 );
 
@@ -190,47 +92,29 @@ const HeroKeyframes = () => (
    ═══════════════════════════════════════════════════════════════════════════ */
 const Hero = () => {
   const [activeIdx, setActiveIdx] = useState(0);
-  const [paused, setPaused] = useState(false); // UX Fix #2
   const [mounted, setMounted] = useState(false);
-  const heroRef = useRef(null);
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 100);
     return () => clearTimeout(t);
   }, []);
 
-  // Fixed auto-change with pause on hover (UX Fix #2)
   useEffect(() => {
-    if (paused) return;
     const id = setInterval(() => setActiveIdx((p) => (p + 1) % SERVICES.length), 3000);
     return () => clearInterval(id);
-  }, [paused]);
-
-  // Fixed scroll function (Fix #4)
-  const scrollToElement = useCallback((elementId) => {
-    const el = document.getElementById(elementId);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
   }, []);
-
-  const handleScroll = useCallback((e, elementId) => {
-    e.preventDefault();
-    scrollToElement(elementId);
-  }, [scrollToElement]);
 
   const cur = SERVICES[activeIdx];
   const d = (i) => `${i * 80 + 200}ms`;
+  const scroll = (e, sel) => { e.preventDefault(); document.querySelector(sel)?.scrollIntoView({ behavior: "smooth" }); };
 
   return (
     <>
       <HeroKeyframes />
 
       <section
-        ref={heroRef}
         id="hero"
-        aria-label="Hero section - Web development services"
-        role="banner" // SEO/Accessibility Fix #3
+        aria-label="Hero"
         style={{
           position: "relative",
           minHeight: "100svh",
@@ -314,23 +198,35 @@ const Hero = () => {
         {/* ─── MAIN CONTENT ─── */}
         <main
           id="main-content"
-          role="main" // SEO/Accessibility Fix #3
           style={{
             position: "relative", zIndex: 10, flex: 1, width: "100%",
             padding: "clamp(110px,14vh,160px) 1.5rem clamp(48px,6vh,80px)",
           }}
         >
           <div style={{
-            width: "100%",  margin: "0 auto",
+            maxWidth: "1320px", margin: "0 auto",
             display: "grid", gridTemplateColumns: "1fr",
             gap: "clamp(48px,7vw,80px)", alignItems: "center",
           }} className="hero-grid">
 
             {/* ══════ LEFT COLUMN ══════ */}
             <div>
-            
+              {/* Badge */}
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: "10px",
+                padding: "7px 18px 7px 8px", borderRadius: B.r.full,
+                border: `1px solid ${B.blue[200]}60`,
+                background: `linear-gradient(135deg, ${B.blue[50]}, ${B.surface})`,
+                marginBottom: "clamp(24px,3.5vw,32px)",
+                opacity: mounted ? 1 : 0,
+                animation: mounted ? `hFadeUp 0.7s cubic-bezier(0.22,1,0.36,1) ${d(0)} both` : "none",
+                boxShadow: B.shadow.xs,
+              }}>
+               
+              
+              </div>
 
-              {/* Headline with pause on hover (UX Fix #2) */}
+              {/* Headline */}
               <h1 style={{
                 fontSize: "clamp(2.4rem,6vw,3.7rem)",
                 fontWeight: 800, lineHeight: 1.05, letterSpacing: "-0.04em",
@@ -339,15 +235,10 @@ const Hero = () => {
                 animation: mounted ? `hFadeUp 0.7s cubic-bezier(0.22,1,0.36,1) ${d(1)} both` : "none",
               }}>
                 We Build{" "}
-                <span
-                  onMouseEnter={() => setPaused(true)}
-                  onMouseLeave={() => setPaused(false)}
-                  style={{
-                    display: "inline-block", position: "relative", color: cur.color,
-                    transition: "color 0.5s ease", cursor: "pointer",
-                  }}
-                  aria-label={`Currently showing: ${cur.label} services`}
-                >
+                <span style={{
+                  display: "inline-block", position: "relative", color: cur.color,
+                  transition: "color 0.5s ease",
+                }}>
                   {cur.label}
                   <span style={{
                     position: "absolute", bottom: "-2px", left: 0, right: 0, height: "3px",
@@ -380,7 +271,7 @@ const Hero = () => {
                 stand out in a competitive landscape.
               </p>
 
-              {/* CTAs with accessibility labels */}
+              {/* CTAs */}
               <div style={{
                 display: "flex", flexWrap: "wrap", gap: "14px",
                 marginBottom: "clamp(36px,5vw,52px)",
@@ -389,25 +280,41 @@ const Hero = () => {
               }}>
                 <a
                   href="#contact"
-                  onClick={(e) => handleScroll(e, "contact")}
-                  style={styles.buttonPrimary}
-                  aria-label="Start your project - opens contact section"
+                  onClick={(e) => scroll(e, "#contact")}
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: "10px",
+                    padding: "15px 32px", borderRadius: B.r.lg,
+                    background: `linear-gradient(135deg, ${B.blue[500]} 0%, ${B.blue[700]} 100%)`,
+                    color: "#FFFFFF", fontSize: "14px", fontWeight: 700,
+                    textDecoration: "none", fontFamily: "'Syne',sans-serif",
+                    letterSpacing: "0.02em",
+                    boxShadow: `0 4px 20px ${B.blue[500]}30, 0 1px 3px ${B.blue[800]}20, inset 0 1px 0 rgba(255,255,255,0.2)`,
+                    transition: "all 0.3s cubic-bezier(0.22,1,0.36,1)",
+                  }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = "translateY(-2px)";
                     e.currentTarget.style.boxShadow = `0 12px 36px ${B.blue[500]}40, 0 2px 6px ${B.blue[800]}25, inset 0 1px 0 rgba(255,255,255,0.2)`;
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = "none";
-                    e.currentTarget.style.boxShadow = styles.buttonPrimary.boxShadow;
+                    e.currentTarget.style.boxShadow = `0 4px 20px ${B.blue[500]}30, 0 1px 3px ${B.blue[800]}20, inset 0 1px 0 rgba(255,255,255,0.2)`;
                   }}
                 >
-                  Start Your Project <ArrowRight size={16} aria-hidden="true" />
+                  Start Your Project <ArrowRight size={16} />
                 </a>
                 <a
                   href="#portfolio"
-                  onClick={(e) => handleScroll(e, "portfolio")}
-                  style={styles.buttonSecondary}
-                  aria-label="View our portfolio of previous work"
+                  onClick={(e) => scroll(e, "#portfolio")}
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: "8px",
+                    padding: "15px 28px", borderRadius: B.r.lg,
+                    background: B.surface,
+                    border: `1px solid ${B.blue[200]}60`,
+                    color: B.text2, fontSize: "14px", fontWeight: 600,
+                    textDecoration: "none", fontFamily: "'DM Sans',sans-serif",
+                    boxShadow: B.shadow.sm,
+                    transition: "all 0.3s cubic-bezier(0.22,1,0.36,1)",
+                  }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background = B.blue[50];
                     e.currentTarget.style.borderColor = B.blue[300];
@@ -427,7 +334,7 @@ const Hero = () => {
                     display: "flex", alignItems: "center", justifyContent: "center",
                     width: "28px", height: "28px", borderRadius: "50%",
                     background: `${B.blue[500]}10`, flexShrink: 0,
-                  }} aria-hidden="true">
+                  }}>
                     <Play size={12} color={B.blue[600]} fill={B.blue[600]} />
                   </span>
                   View Portfolio
@@ -468,7 +375,11 @@ const Hero = () => {
               className="hero-right"
             >
               {/* — Main Dashboard Card — */}
-              <div style={styles.dashboardCard}>
+              <div style={{
+                position: "relative", borderRadius: B.r["2xl"], overflow: "hidden",
+                background: B.surface, border: `1px solid ${B.blue[100]}50`,
+                boxShadow: B.shadow.xl,
+              }}>
                 {/* Browser chrome */}
                 <div style={{
                   display: "flex", alignItems: "center", gap: "8px",
@@ -492,7 +403,7 @@ const Hero = () => {
                 </div>
 
                 {/* Code block */}
-                <div style={styles.codeBlock}>
+                <div style={{ padding: "20px 22px", background: "#0F172A", position: "relative" }}>
                   <div style={{ display: "flex", gap: "4px", marginBottom: "16px" }}>
                     {[{ label:"App.js", active:true },{ label:"Server.js", active:false },{ label:"DB.js", active:false }].map((tab) => (
                       <div key={tab.label} style={{
@@ -578,7 +489,15 @@ const Hero = () => {
                   const Ic = s.icon;
                   const isActive = i === activeIdx;
                   return (
-                    <div key={s.label} style={styles.serviceChip(s.color, isActive)}>
+                    <div key={s.label} style={{
+                      display: "flex", alignItems: "center", gap: "10px",
+                      padding: "14px 14px", borderRadius: B.r.lg,
+                      background: isActive ? `${s.color}0A` : B.surface,
+                      border: `1px solid ${isActive ? `${s.color}30` : `${B.blue[100]}30`}`,
+                      transition: "all 0.4s cubic-bezier(0.22,1,0.36,1)",
+                      boxShadow: isActive ? `0 0 0 1px ${s.color}15, ${B.shadow.sm}` : B.shadow.xs,
+                      transform: isActive ? "scale(1.02)" : "scale(1)",
+                    }}>
                       <div style={{
                         width: "32px", height: "32px", borderRadius: B.r.md,
                         background: `${s.color}12`, display: "flex",
@@ -607,7 +526,13 @@ const Hero = () => {
                   { icon: Star, value: "4.9", label: "Rating", color: B.amber[500] },
                   { icon: Users, value: "150+", label: "Clients", color: B.blue[500] },
                 ].map(({ icon: Ic, value, label, color }, idx) => (
-                  <div key={label} style={styles.metricCard(color, idx * 0.8)}>
+                  <div key={label} style={{
+                    display: "flex", flexDirection: "column", alignItems: "center",
+                    gap: "6px", padding: "16px 10px", borderRadius: B.r.lg,
+                    background: B.surface, border: `1px solid ${color}15`,
+                    boxShadow: B.shadow.xs,
+                    animation: `hFloat 6s ease-in-out infinite ${idx * 0.8}s`,
+                  }}>
                     <div style={{
                       width: "32px", height: "32px", borderRadius: B.r.md,
                       background: `${color}12`, display: "flex",
@@ -645,7 +570,14 @@ const Hero = () => {
               const Ic = s.icon;
               const isActive = i === activeIdx;
               return (
-                <div key={s.label} style={styles.serviceChip(s.color, isActive)}>
+                <div key={s.label} style={{
+                  display: "flex", alignItems: "center", gap: "10px",
+                  padding: "14px", borderRadius: B.r.lg,
+                  background: isActive ? `${s.color}0A` : B.surface,
+                  border: `1px solid ${isActive ? `${s.color}30` : `${B.blue[100]}30`}`,
+                  transition: "all 0.4s ease",
+                  boxShadow: B.shadow.xs,
+                }}>
                   <div style={{
                     width: "30px", height: "30px", borderRadius: B.r.md,
                     background: `${s.color}12`, display: "flex",
@@ -658,8 +590,7 @@ const Hero = () => {
                       color: isActive ? B.text1 : B.text2,
                       fontWeight: 600, fontSize: "11px",
                       fontFamily: "'Syne',sans-serif",
-                      whiteSpace: "nowrap",overflowX: "hidden",
-overflowY: "visible", textOverflow: "ellipsis",
+                      whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
                     }}>{s.label}</div>
                     <div style={{ color: B.text4, fontSize: "9px" }}>{s.sub}</div>
                   </div>
@@ -668,6 +599,15 @@ overflowY: "visible", textOverflow: "ellipsis",
             })}
           </div>
         </div>
+
+        {/* ─── RESPONSIVE STYLES ─── */}
+        <style>{`
+          @media(min-width:1024px){
+            .hero-grid{grid-template-columns:1fr 1.1fr!important}
+            .hero-right{display:flex!important}
+            .mobile-visual{display:none!important}
+          }
+        `}</style>
       </section>
     </>
   );

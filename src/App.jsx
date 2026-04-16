@@ -1,64 +1,78 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { lazy, Suspense } from "react";
 import Layout from "./components/layout/Layout";
-import Hero from "./components/layout/Hero";
-import Services from "./components/layout/Services";
-import Work from "./components/layout/Work";
-import Contact from "./components/layout/Contact";
-import Insights from "./components/layout/Insights";
 import Footer from "./components/layout/Footer";
 
-// Import all service pages
-import WebDevelopment from "./pages/services/WebDevelopment";
-import Ecommerce from "./pages/services/Ecommerce";
-import CustomSoftware from "./pages/services/CustomSoftware";
-import APIDevelopment from "./pages/services/APIDevelopment";
-import UIUXDesign from "./pages/services/UIUXDesign";
-import LandingPages from "./pages/services/LandingPages";
-import WebsiteRedesign from "./pages/services/WebsiteRedesign";
-import ATSResume from "./pages/services/ATSResume";
-import PortfolioWebsite from "./pages/services/PortfolioWebsite";
-import CollegeProjects from "./pages/services/CollegeProjects";
-import Maintenance from "./pages/services/Maintenance";
-import Performance from "./pages/services/Performance";
+// Lazy load components for better performance
+const Hero = lazy(() => import("./components/layout/Hero"));
+const Services = lazy(() => import("./components/layout/Services"));
+const Work = lazy(() => import("./components/layout/Work"));
+const Contact = lazy(() => import("./components/layout/Contact"));
+const Insights = lazy(() => import("./components/layout/Insights"));
+
+// Lazy load service pages
+const WebDevelopment = lazy(() => import("./pages/services/WebDevelopment"));
+const Ecommerce = lazy(() => import("./pages/services/Ecommerce"));
+const Careers = lazy(() => import("./pages/services/Careers"));
+const CustomSoftware = lazy(() => import("./pages/services/CustomSoftware"));
+const APIDevelopment = lazy(() => import("./pages/services/APIDevelopment"));
+const UIUXDesign = lazy(() => import("./pages/services/UIUXDesign"));
+const LandingPages = lazy(() => import("./pages/services/LandingPages"));
+const WebsiteRedesign = lazy(() => import("./pages/services/WebsiteRedesign"));
+const ATSResume = lazy(() => import("./pages/services/ATSResume"));
+const PortfolioWebsite = lazy(() => import("./pages/services/PortfolioWebsite"));
+const CollegeProjects = lazy(() => import("./pages/services/CollegeProjects"));
+const Maintenance = lazy(() => import("./pages/services/Maintenance"));
+const Performance = lazy(() => import("./pages/services/Performance"));
+
+// Loading component
+const PageLoader = () => (
+  <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
+    <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+  </div>
+);
+
+// Home page component
+const HomePage = () => (
+  <>
+    <section id="hero"><Hero /></section>
+    <section id="services"><Services /></section>
+    <section id="work"><Work /></section>
+    <section id="contact"><Contact /></section>
+    <section id="insights"><Insights /></section>
+    <Footer />
+  </>
+);
 
 function App() {
   return (
-   <BrowserRouter>
-  <Routes>
-
-    {/* ✅ Layout Wrapper for ALL pages */}
-    <Route path="/" element={<Layout />}>
-      
-      {/* Home Page */}
-      <Route index element={
-        <>
-          <section id="hero"><Hero /></section>
-          <section id="services"><Services /></section>
-          <section id="work"><Work /></section>
-          <section id="contact"><Contact /></section>
-          <section id="insights"><Insights /></section>
-          <Footer />
-        </>
-      } />
-
-      {/* Service Pages */}
-      <Route path="services/web-development" element={<WebDevelopment />} />
-      <Route path="services/ecommerce" element={<Ecommerce />} />
-      <Route path="services/custom-software" element={<CustomSoftware />} />
-      <Route path="services/api-development" element={<APIDevelopment />} />
-      <Route path="services/ui-ux-design" element={<UIUXDesign />} />
-      <Route path="services/landing-pages" element={<LandingPages />} />
-      <Route path="services/redesign" element={<WebsiteRedesign />} />
-      <Route path="services/ats-resume" element={<ATSResume />} />
-      <Route path="services/portfolio" element={<PortfolioWebsite />} />
-      <Route path="services/projects" element={<CollegeProjects />} />
-      <Route path="services/maintenance" element={<Maintenance />} />
-      <Route path="services/performance" element={<Performance />} />
-
-    </Route>
-
-  </Routes>
-</BrowserRouter>
+    <BrowserRouter>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            {/* Home Page */}
+            <Route index element={<HomePage />} />
+            
+            {/* Service Pages - Clean & Organized */}
+            <Route path="services">
+              <Route path="web-development" element={<WebDevelopment />} />
+              <Route path="ecommerce" element={<Ecommerce />} />
+              <Route path="careers" element={<Careers />} />
+              <Route path="custom-software" element={<CustomSoftware />} />
+              <Route path="api-development" element={<APIDevelopment />} />
+              <Route path="ui-ux-design" element={<UIUXDesign />} />
+              <Route path="landing-pages" element={<LandingPages />} />
+              <Route path="redesign" element={<WebsiteRedesign />} />
+              <Route path="ats-resume" element={<ATSResume />} />
+              <Route path="portfolio" element={<PortfolioWebsite />} />
+              <Route path="projects" element={<CollegeProjects />} />
+              <Route path="maintenance" element={<Maintenance />} />
+              <Route path="performance" element={<Performance />} />
+            </Route>
+          </Route>
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
   );
 }
 

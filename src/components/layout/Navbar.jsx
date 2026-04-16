@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Menu,
   X,
@@ -26,7 +25,7 @@ const CONFIG = {
   MOBILE_BREAKPOINT: 1024,
   TABLET_BREAKPOINT: 768,
   DROPDOWN_CLOSE_DELAY: 150,
-  OBSERVER_ROOT_MARGIN: "-50% 0px -40% 0px",
+  OBSERVER_ROOT_MARGIN: "-35% 0px -60% 0px",
   CONTACT: {
     PHONE: "+91 12345 67890",
     EMAIL: "hello@nextgenitsolution.com",
@@ -37,7 +36,7 @@ const CONFIG = {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   DESIGN TOKENS
+   DESIGN TOKENS - INDUSTRY STANDARD
    ═══════════════════════════════════════════════════════════════════════════ */
 const B = {
   bg: "#FAFBFF",
@@ -128,7 +127,17 @@ const SERVICES = [
 ];
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   PROFESSIONAL SCROLL HANDLER
+   NAVIGATION DATA
+   ═══════════════════════════════════════════════════════════════════════════ */
+const NAV_LINKS = [
+  { label: "Home", href: "#hero" },
+  { label: "Work", href: "#work" },
+  { label: "Contact", href: "#contact" },
+  { label: "Insights", href: "#insights" },
+];
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCROLL HANDLER - SMOOTH + RELIABLE
    ═══════════════════════════════════════════════════════════════════════════ */
 const scrollToElement = (href, setMobileOpen = null) => {
   if (!href || !href.startsWith("#")) {
@@ -142,23 +151,29 @@ const scrollToElement = (href, setMobileOpen = null) => {
     return false;
   }
 
-  const yOffset = -(CONFIG.NAVBAR_HEIGHT + CONFIG.TOP_BAR_HEIGHT);
-  const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-  
-  window.scrollTo({
-    top: y,
-    behavior: "smooth",
-  });
-
+  // Close mobile menu if provided
   if (setMobileOpen && typeof setMobileOpen === "function") {
     setMobileOpen(false);
   }
+
+  // Use requestAnimationFrame for smoother scroll on mobile
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      const yOffset = -(CONFIG.NAVBAR_HEIGHT + CONFIG.TOP_BAR_HEIGHT);
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      
+      window.scrollTo({
+        top: y,
+        behavior: "smooth",
+      });
+    }, 60);
+  });
 
   return true;
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   OPTIMIZED DEBOUNCE FUNCTION
+   DEBOUNCE FUNCTION
    ═══════════════════════════════════════════════════════════════════════════ */
 const debounce = (fn, delay = 100) => {
   let timeout;
@@ -169,40 +184,30 @@ const debounce = (fn, delay = 100) => {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SCROLL LOCK (FIXED - NO ANDROID ISSUES)
+   SCROLL LOCK - SIMPLE & RELIABLE
    ═══════════════════════════════════════════════════════════════════════════ */
 const preventBodyScroll = (lock) => {
   if (lock) {
-    const scrollY = window.scrollY;
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.width = '100%';
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
   } else {
-    const scrollY = document.body.style.top;
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.width = '';
-    document.body.style.overflow = '';
-    if (scrollY) {
-      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
-    }
+    document.body.style.overflow = "";
   }
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   GLOBAL STYLES (OPTIMIZED)
+   GLOBAL STYLES - CLEAN TOUCH OPTIMIZATIONS
    ═══════════════════════════════════════════════════════════════════════════ */
 const GlobalStyles = () => (
   <style>{`
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
+    /* Smooth scroll behavior */
     html {
       scroll-behavior: smooth;
+    }
+    
+    /* Touch optimizations */
+    * {
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
     
     /* Animations */
@@ -239,60 +244,30 @@ const GlobalStyles = () => (
       to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
     }
 
-    /* Performance Optimizations */
+    /* Performance optimizations */
     .navbar-main,
-    .nav-desktop-links,
-    .services-dropdown-trigger {
+    .nav-desktop-links {
       transform: translateZ(0);
       backface-visibility: hidden;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Custom scrollbar for mobile menu */
-    .nav-mobile-panel::-webkit-scrollbar {
-      width: 4px;
-    }
-    .nav-mobile-panel::-webkit-scrollbar-track {
-      background: #F1F5F9;
-      border-radius: 4px;
-    }
-    .nav-mobile-panel::-webkit-scrollbar-thumb {
-      background: #CBD5E1;
-      border-radius: 4px;
-    }
-    
-    /* Section scroll margin */
-    section, 
-    #hero, 
-    #services, 
-    #work, 
-    #contact, 
-    #insights {
-      scroll-margin-top: 112px !important;
+    /* Mobile menu smooth scrolling */
+    .nav-mobile-panel {
+      -webkit-overflow-scrolling: touch;
     }
     
     /* Reduced motion preference */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
       }
-      html {
-        scroll-behavior: auto !important;
-      }
-    }
-
-    /* Prevent layout shift */
-    .no-layout-shift {
-      contain: layout style paint;
     }
   `}</style>
 );
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   BRAND COMPONENT (IMPROVED SCALING)
+   BRAND COMPONENT
    ═══════════════════════════════════════════════════════════════════════════ */
 const Brand = ({ compact = false }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -303,10 +278,9 @@ const Brand = ({ compact = false }) => {
       style={{
         display: "flex",
         alignItems: "center",
-        gap: compact ? "6px" : "clamp(8px, 2vw, 11px)",
+        gap: compact ? "8px" : "11px",
         opacity: imageLoaded ? 1 : 0,
         transition: "opacity 0.3s ease",
-        flexShrink: 0,
       }}
     >
       {!imageError ? (
@@ -317,9 +291,7 @@ const Brand = ({ compact = false }) => {
           onLoad={() => setImageLoaded(true)}
           onError={() => setImageError(true)}
           style={{
-            height: compact 
-              ? "clamp(32px, 8vw, 40px)" 
-              : "clamp(45px, 8vw, 65px)",
+            height: compact ? "40px" : "65px",
             width: "auto",
             objectFit: "contain",
             flexShrink: 0,
@@ -328,8 +300,8 @@ const Brand = ({ compact = false }) => {
       ) : (
         <div
           style={{
-            height: compact ? "clamp(32px, 8vw, 40px)" : "clamp(45px, 8vw, 65px)",
-            width: compact ? "clamp(32px, 8vw, 40px)" : "clamp(45px, 8vw, 65px)",
+            height: compact ? "40px" : "65px",
+            width: compact ? "40px" : "65px",
             background: `linear-gradient(135deg, ${B.blue[500]}, ${B.blue[700]})`,
             borderRadius: B.r.md,
             display: "flex",
@@ -337,27 +309,19 @@ const Brand = ({ compact = false }) => {
             justifyContent: "center",
           }}
         >
-          <span style={{ 
-            color: B.white, 
-            fontWeight: 700, 
-            fontSize: compact ? "clamp(14px, 4vw, 16px)" : "clamp(18px, 5vw, 24px)" 
-          }}>
+          <span style={{ color: B.white, fontWeight: 700, fontSize: compact ? "16px" : "24px" }}>
             N
           </span>
         </div>
       )}
-      <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.2, gap: "2px" }}>
+      <div style={{ display: "flex", flexDirection: "column", lineHeight: 1, gap: "1px" }}>
         <span
           style={{
-            fontSize: compact 
-              ? "clamp(14px, 4vw, 17px)" 
-              : "clamp(16px, 4vw, 20px)",
+            fontSize: compact ? "17px" : "20px",
             fontWeight: 900,
             fontFamily: "'Syne', sans-serif",
             letterSpacing: "-0.03em",
             color: B.text1,
-            transition: "color 0.2s ease",
-            whiteSpace: "nowrap",
           }}
         >
           NextGen
@@ -365,13 +329,12 @@ const Brand = ({ compact = false }) => {
         {!compact && (
           <span
             style={{
-              fontSize: "clamp(7px, 2vw, 9px)",
+              fontSize: "9px",
               fontWeight: 600,
               fontFamily: "'DM Sans', sans-serif",
               color: B.text4,
               letterSpacing: "0.12em",
               textTransform: "uppercase",
-              whiteSpace: "nowrap",
             }}
           >
             IT Solution
@@ -387,6 +350,7 @@ const Brand = ({ compact = false }) => {
    ═══════════════════════════════════════════════════════════════════════════ */
 const NavLink = ({ label, href, isActive, delay, onClick }) => {
   const [hovered, setHovered] = useState(false);
+  const active = isActive === href;
 
   const handleClick = useCallback(
     (e) => {
@@ -405,25 +369,24 @@ const NavLink = ({ label, href, isActive, delay, onClick }) => {
       onMouseLeave={() => setHovered(false)}
       style={{
         position: "relative",
-        padding: "8px clamp(12px, 1.5vw, 18px)",
+        padding: "8px 18px",
         borderRadius: B.r.full,
         fontSize: "clamp(12px, 1.2vw, 13.5px)",
-        fontWeight: isActive ? 700 : 500,
-        color: isActive ? B.blue[600] : hovered ? B.blue[600] : B.text3,
+        fontWeight: active ? 700 : 500,
+        color: active ? B.blue[600] : hovered ? B.blue[600] : B.text3,
         textDecoration: "none",
         fontFamily: "'DM Sans', sans-serif",
         letterSpacing: "0.01em",
-        background: isActive || hovered ? `${B.blue[500]}08` : "transparent",
+        background: active || hovered ? `${B.blue[500]}08` : "transparent",
         transition: B.transition.default,
-        transform: hovered && !isActive ? "translateY(-1px)" : "none",
+        transform: hovered && !active ? "translateY(-1px)" : "none",
         opacity: 1,
         animation: `nFadeIn 0.45s ease ${delay}ms both`,
         cursor: "pointer",
-        whiteSpace: "nowrap",
       }}
     >
       {label}
-      {isActive && (
+      {active && (
         <span
           style={{
             position: "absolute",
@@ -442,13 +405,13 @@ const NavLink = ({ label, href, isActive, delay, onClick }) => {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SERVICES DROPDOWN (IMPROVED RESPONSIVE)
+   SERVICES DROPDOWN
    ═══════════════════════════════════════════════════════════════════════════ */
 const ServicesDropdown = ({ isActive, onClick, delay }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
-  const navigate = useNavigate();
+  const active = isActive === "#services";
 
   const closeDropdown = useCallback(() => {
     setIsOpen(false);
@@ -493,10 +456,10 @@ const ServicesDropdown = ({ isActive, onClick, delay }) => {
       e.stopPropagation();
       closeDropdown();
       setTimeout(() => {
-        navigate(link);
-      }, 100);
+        window.location.href = link;
+      }, 150);
     },
-    [closeDropdown, navigate]
+    [closeDropdown]
   );
 
   const handleContactClick = useCallback(
@@ -506,7 +469,7 @@ const ServicesDropdown = ({ isActive, onClick, delay }) => {
       closeDropdown();
       setTimeout(() => {
         scrollToElement("#contact");
-      }, 100);
+      }, 150);
     },
     [closeDropdown]
   );
@@ -518,18 +481,18 @@ const ServicesDropdown = ({ isActive, onClick, delay }) => {
         onClick={handleToggle}
         aria-expanded={isOpen}
         aria-haspopup="true"
-        data-active={isActive || undefined}
+        data-active={active || undefined}
         className="services-dropdown-trigger"
         style={{
           display: "flex",
           alignItems: "center",
           gap: "4px",
-          padding: "8px clamp(12px, 1.5vw, 18px)",
+          padding: "8px 18px",
           borderRadius: B.r.full,
           fontSize: "clamp(12px, 1.2vw, 13.5px)",
-          fontWeight: isActive ? 700 : 500,
-          color: isActive ? B.blue[600] : B.text3,
-          background: isActive ? `${B.blue[500]}08` : "transparent",
+          fontWeight: active ? 700 : 500,
+          color: active ? B.blue[600] : B.text3,
+          background: active ? `${B.blue[500]}08` : "transparent",
           transition: B.transition.default,
           cursor: "pointer",
           border: "none",
@@ -537,7 +500,6 @@ const ServicesDropdown = ({ isActive, onClick, delay }) => {
           letterSpacing: "0.01em",
           opacity: 1,
           animation: `nFadeIn 0.45s ease ${delay}ms both`,
-          whiteSpace: "nowrap",
         }}
       >
         Services
@@ -557,8 +519,7 @@ const ServicesDropdown = ({ isActive, onClick, delay }) => {
             top: "calc(100% + 8px)",
             left: "50%",
             transform: "translateX(-50%)",
-            width: "min(720px, 85vw)",
-            maxWidth: "720px",
+            width: "min(720px, 90vw)",
             background: B.surface,
             borderRadius: B.r["2xl"],
             boxShadow: B.shadow["2xl"],
@@ -571,7 +532,7 @@ const ServicesDropdown = ({ isActive, onClick, delay }) => {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
               gap: "1px",
               background: `${B.blue[200]}30`,
             }}
@@ -583,7 +544,7 @@ const ServicesDropdown = ({ isActive, onClick, delay }) => {
                   key={category.category}
                   style={{
                     background: B.surface,
-                    padding: "clamp(16px, 3vw, 20px) clamp(12px, 2vw, 16px)",
+                    padding: "20px 16px",
                   }}
                 >
                   <div
@@ -605,14 +566,13 @@ const ServicesDropdown = ({ isActive, onClick, delay }) => {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        flexShrink: 0,
                       }}
                     >
                       <Icon size={16} color={B.blue[600]} />
                     </div>
                     <h3
                       style={{
-                        fontSize: "clamp(13px, 2.5vw, 14px)",
+                        fontSize: "14px",
                         fontWeight: 700,
                         color: B.text1,
                         margin: 0,
@@ -631,12 +591,11 @@ const ServicesDropdown = ({ isActive, onClick, delay }) => {
                         onClick={(e) => handleServiceClick(e, item.link)}
                         style={{
                           display: "block",
-                          padding: "8px 8px",
+                          padding: "6px 8px",
                           borderRadius: B.r.md,
                           textDecoration: "none",
                           transition: B.transition.default,
                           cursor: "pointer",
-                          minHeight: "44px", // Better touch target
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.background = B.blue[50];
@@ -657,7 +616,7 @@ const ServicesDropdown = ({ isActive, onClick, delay }) => {
                         >
                           <span
                             style={{
-                              fontSize: "clamp(12px, 2vw, 13px)",
+                              fontSize: "13px",
                               fontWeight: 600,
                               color: B.text2,
                               fontFamily: "'DM Sans', sans-serif",
@@ -669,7 +628,7 @@ const ServicesDropdown = ({ isActive, onClick, delay }) => {
                         </div>
                         <p
                           style={{
-                            fontSize: "clamp(10px, 1.8vw, 11px)",
+                            fontSize: "11px",
                             color: B.text4,
                             margin: 0,
                             fontFamily: "'DM Sans', sans-serif",
@@ -688,7 +647,7 @@ const ServicesDropdown = ({ isActive, onClick, delay }) => {
 
           <div
             style={{
-              padding: "clamp(12px, 2vw, 14px) clamp(16px, 3vw, 20px)",
+              padding: "14px 20px",
               background: B.blue[50],
               borderTop: `1px solid ${B.blue[200]}20`,
               textAlign: "center",
@@ -701,14 +660,12 @@ const ServicesDropdown = ({ isActive, onClick, delay }) => {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "8px",
-                fontSize: "clamp(11px, 2vw, 12px)",
+                fontSize: "12px",
                 fontWeight: 600,
                 color: B.blue[600],
                 textDecoration: "none",
                 fontFamily: "'DM Sans', sans-serif",
                 transition: "gap 0.2s ease",
-                minHeight: "44px",
-                padding: "8px 12px",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.gap = "12px";
@@ -728,20 +685,23 @@ const ServicesDropdown = ({ isActive, onClick, delay }) => {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   MOBILE SERVICES SECTION (IMPROVED TOUCH TARGETS)
+   MOBILE SERVICES SECTION
    ═══════════════════════════════════════════════════════════════════════════ */
 const MobileServicesSection = ({ delay, activeSection, onServiceClick }) => {
   const [openCategory, setOpenCategory] = useState(null);
-  const navigate = useNavigate();
+  const active = activeSection === "#services";
 
-  const toggleCategory = () => {
+  const toggleCategory = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     setOpenCategory(openCategory === "services" ? null : "services");
   };
 
   const handleServiceClick = (e, link) => {
     e.preventDefault();
-    navigate(link);
-    onServiceClick?.();
+    e.stopPropagation();
+    window.location.href = link;
+    if (onServiceClick) onServiceClick();
   };
 
   return (
@@ -760,14 +720,12 @@ const MobileServicesSection = ({ delay, activeSection, onServiceClick }) => {
           padding: "14px 18px",
           borderRadius: B.r.lg,
           fontSize: "15px",
-          fontWeight: activeSection === "#services" ? 700 : 500,
-          color: activeSection === "#services" ? B.blue[600] : B.text2,
-          background: activeSection === "#services" ? `${B.blue[500]}08` : "transparent",
-          borderLeft:
-            activeSection === "#services" ? `3px solid ${B.blue[500]}` : "3px solid transparent",
+          fontWeight: active ? 700 : 500,
+          color: active ? B.blue[600] : B.text2,
+          background: active ? `${B.blue[500]}08` : "transparent",
+          borderLeft: active ? `3px solid ${B.blue[500]}` : "3px solid transparent",
           cursor: "pointer",
           transition: B.transition.default,
-          minHeight: "52px", // Better touch target
         }}
       >
         <span>Services</span>
@@ -824,12 +782,11 @@ const MobileServicesSection = ({ delay, activeSection, onServiceClick }) => {
                   onClick={(e) => handleServiceClick(e, item.link)}
                   style={{
                     display: "block",
-                    padding: "12px 12px", // Increased touch target
+                    padding: "10px 12px",
                     textDecoration: "none",
                     borderRadius: B.r.sm,
                     transition: B.transition.default,
                     cursor: "pointer",
-                    minHeight: "48px", // Better touch target
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background = B.blue[100];
@@ -921,7 +878,7 @@ const CTAButton = ({ href, label, onClick, delay, fullWidth = false, variant = "
         alignItems: "center",
         justifyContent: "center",
         gap: "8px",
-        padding: "clamp(8px, 2vw, 10px) clamp(16px, 4vw, 24px)",
+        padding: "10px 24px",
         borderRadius: B.r.full,
         width: fullWidth ? "100%" : "auto",
         fontSize: "clamp(12px, 1.2vw, 13.5px)",
@@ -934,8 +891,6 @@ const CTAButton = ({ href, label, onClick, delay, fullWidth = false, variant = "
         cursor: "pointer",
         opacity: 1,
         animation: `nFadeIn 0.45s ease ${delay}ms both`,
-        whiteSpace: "nowrap",
-        minHeight: "44px", // Better touch target
         ...getButtonStyles(),
       }}
     >
@@ -946,17 +901,28 @@ const CTAButton = ({ href, label, onClick, delay, fullWidth = false, variant = "
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   MOBILE MENU LINK (IMPROVED TOUCH TARGETS)
+   MOBILE LINK - KEPT <a> TAG WITH PROPER CONTROL
    ═══════════════════════════════════════════════════════════════════════════ */
 const MobileLink = ({ label, href, isActive, delay, onClick }) => {
-  const [hovered, setHovered] = useState(false);
+  const [tapped, setTapped] = useState(false);
+  const active = isActive === href;
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setTapped(true);
+    setTimeout(() => setTapped(false), 120);
+
+    if (onClick) {
+      onClick(e);
+    }
+  };
 
   return (
     <a
       href={href}
-      onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onClick={handleClick}
       style={{
         display: "flex",
         alignItems: "center",
@@ -964,25 +930,21 @@ const MobileLink = ({ label, href, isActive, delay, onClick }) => {
         padding: "14px 18px",
         borderRadius: B.r.lg,
         fontSize: "15px",
-        fontWeight: isActive ? 700 : 500,
-        color: isActive ? B.blue[700] : hovered ? B.blue[600] : B.text2,
+        fontWeight: active ? 700 : 500,
+        color: active ? B.blue[700] : B.text2,
         textDecoration: "none",
-        fontFamily: "'DM Sans', sans-serif",
-        background: isActive || hovered ? `${B.blue[500]}08` : "transparent",
-        borderLeft: isActive
-          ? `3px solid ${B.blue[500]}`
-          : hovered
-          ? `3px solid ${B.blue[300]}`
-          : "3px solid transparent",
-        transition: B.transition.default,
+        background: tapped ? `${B.blue[500]}15` : "transparent",
+        borderLeft: active ? `3px solid ${B.blue[500]}` : "3px solid transparent",
+        transition: "all 0.15s ease",
         cursor: "pointer",
         opacity: 0,
         animation: `nSlideRight 0.3s cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms both`,
-        minHeight: "52px", // Better touch target
+        touchAction: "manipulation",
+        WebkitTapHighlightColor: "transparent",
       }}
     >
       <span>{label}</span>
-      {isActive && (
+      {active && (
         <span
           style={{
             width: "6px",
@@ -998,7 +960,7 @@ const MobileLink = ({ label, href, isActive, delay, onClick }) => {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   TOP BAR (IMPROVED VISIBILITY & RESPONSIVE)
+   TOP BAR
    ═══════════════════════════════════════════════════════════════════════════ */
 const TopBar = ({ mounted }) => {
   const handleContactClick = (e) => {
@@ -1019,12 +981,10 @@ const TopBar = ({ mounted }) => {
         background: `linear-gradient(135deg, ${B.blue[700]} 0%, ${B.blue[800]} 50%, ${B.blue[900]} 100%)`,
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-between",
+        justifyContent: "center",
         overflow: "hidden",
         opacity: mounted ? 1 : 0,
         animation: mounted ? "nSlideDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) both" : "none",
-        padding: "0 clamp(8px, 4vw, 24px)",
-        gap: "16px",
       }}
     >
       <div
@@ -1038,16 +998,14 @@ const TopBar = ({ mounted }) => {
         }}
       />
 
-      {/* Left Section - Contact Info */}
       <div
         className="topbar-left"
         style={{
-          display: "flex",
+          display: "none",
           alignItems: "center",
-          gap: "clamp(8px, 2vw, 20px)",
+          gap: "clamp(12px, 2vw, 20px)",
           position: "relative",
           zIndex: 1,
-          flexWrap: "wrap",
         }}
       >
         <a
@@ -1057,13 +1015,12 @@ const TopBar = ({ mounted }) => {
             display: "flex",
             alignItems: "center",
             gap: "6px",
-            fontSize: "clamp(10px, 1.2vw, 11.5px)",
+            fontSize: "clamp(10px, 1vw, 11.5px)",
             fontWeight: 500,
             color: "rgba(255,255,255,0.85)",
             textDecoration: "none",
             fontFamily: "'DM Sans', sans-serif",
             transition: "color 0.2s ease",
-            whiteSpace: "nowrap",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.color = B.white;
@@ -1085,13 +1042,12 @@ const TopBar = ({ mounted }) => {
             display: "flex",
             alignItems: "center",
             gap: "6px",
-            fontSize: "clamp(10px, 1.2vw, 11.5px)",
+            fontSize: "clamp(10px, 1vw, 11.5px)",
             fontWeight: 500,
             color: "rgba(255,255,255,0.85)",
             textDecoration: "none",
             fontFamily: "'DM Sans', sans-serif",
             transition: "color 0.2s ease",
-            whiteSpace: "nowrap",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.color = B.white;
@@ -1112,11 +1068,10 @@ const TopBar = ({ mounted }) => {
             display: "flex",
             alignItems: "center",
             gap: "6px",
-            fontSize: "clamp(10px, 1.2vw, 11.5px)",
+            fontSize: "clamp(10px, 1vw, 11.5px)",
             fontWeight: 500,
             color: "rgba(255,255,255,0.7)",
             fontFamily: "'DM Sans', sans-serif",
-            whiteSpace: "nowrap",
           }}
         >
           <MapPin size={11} strokeWidth={2} />
@@ -1124,7 +1079,6 @@ const TopBar = ({ mounted }) => {
         </span>
       </div>
 
-      {/* Center Section - Tagline */}
       <div
         className="topbar-center"
         style={{
@@ -1133,8 +1087,7 @@ const TopBar = ({ mounted }) => {
           display: "flex",
           alignItems: "center",
           gap: "8px",
-          flex: 1,
-          justifyContent: "center",
+          padding: "0 1rem",
         }}
       >
         <span
@@ -1150,7 +1103,7 @@ const TopBar = ({ mounted }) => {
         <span
           className="topbar-tagline"
           style={{
-            fontSize: "clamp(9px, 1.2vw, 11.5px)",
+            fontSize: "clamp(10px, 1.2vw, 11.5px)",
             fontWeight: 600,
             color: "rgba(255,255,255,0.9)",
             fontFamily: "'DM Sans', sans-serif",
@@ -1164,13 +1117,12 @@ const TopBar = ({ mounted }) => {
         </span>
       </div>
 
-      {/* Right Section - Hours & CTA */}
       <div
         className="topbar-right"
         style={{
-          display: "flex",
+          display: "none",
           alignItems: "center",
-          gap: "clamp(8px, 2vw, 16px)",
+          gap: "clamp(12px, 2vw, 16px)",
           position: "relative",
           zIndex: 1,
         }}
@@ -1181,11 +1133,10 @@ const TopBar = ({ mounted }) => {
             display: "flex",
             alignItems: "center",
             gap: "6px",
-            fontSize: "clamp(10px, 1.2vw, 11.5px)",
+            fontSize: "clamp(10px, 1vw, 11.5px)",
             fontWeight: 500,
             color: "rgba(255,255,255,0.7)",
             fontFamily: "'DM Sans', sans-serif",
-            whiteSpace: "nowrap",
           }}
         >
           <Clock size={11} strokeWidth={2} />
@@ -1203,7 +1154,7 @@ const TopBar = ({ mounted }) => {
             borderRadius: B.r.full,
             background: "rgba(255,255,255,0.12)",
             border: "1px solid rgba(255,255,255,0.15)",
-            fontSize: "clamp(10px, 1.2vw, 11px)",
+            fontSize: "clamp(10px, 1vw, 11px)",
             fontWeight: 700,
             color: B.white,
             textDecoration: "none",
@@ -1213,7 +1164,6 @@ const TopBar = ({ mounted }) => {
             backdropFilter: "blur(4px)",
             WebkitBackdropFilter: "blur(4px)",
             flexShrink: 0,
-            whiteSpace: "nowrap",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = "rgba(255,255,255,0.2)";
@@ -1232,12 +1182,12 @@ const TopBar = ({ mounted }) => {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   MAIN NAVBAR COMPONENT - FULLY RESPONSIVE
+   MAIN NAVBAR COMPONENT
    ═══════════════════════════════════════════════════════════════════════════ */
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("#hero");
+  const [activeSection, setActiveSection] = useState(null); // 🚨 FIX: Start with null instead of "#hero"
   const [mounted, setMounted] = useState(false);
   const observerRef = useRef(null);
 
@@ -1246,7 +1196,6 @@ const Navbar = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Handle scroll for navbar background
   useEffect(() => {
     const handleScroll = debounce(() => {
       setScrolled(window.scrollY > CONFIG.SCROLL_THRESHOLD);
@@ -1258,94 +1207,32 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Improved IntersectionObserver
+  // 🚨 FIX: IntersectionObserver with null initial state
   useEffect(() => {
-    const sections = [
-      { id: "hero", href: "#hero" },
-      { id: "services", href: "#services" },
-      { id: "work", href: "#work" },
-      { id: "contact", href: "#contact" },
-      { id: "insights", href: "#insights" },
-    ];
+    const ids = [...NAV_LINKS.map((l) => l.href.slice(1)), "services"];
 
     observerRef.current = new IntersectionObserver(
       (entries) => {
-        let visibleSection = null;
-        let maxRatio = 0;
-
         entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
-            maxRatio = entry.intersectionRatio;
-            visibleSection = entry.target.id;
+          if (entry.isIntersecting && entry.target?.id) {
+            setActiveSection(`#${entry.target.id}`);
           }
         });
-
-        if (visibleSection) {
-          setActiveSection(`#${visibleSection}`);
-        }
       },
-      {
-        rootMargin: CONFIG.OBSERVER_ROOT_MARGIN,
-        threshold: [0.3, 0.5, 0.7],
+      { 
+        rootMargin: CONFIG.OBSERVER_ROOT_MARGIN, 
+        threshold: 0.3
       }
     );
 
-    sections.forEach((section) => {
-      const element = document.getElementById(section.id);
-      if (element && observerRef.current) {
-        observerRef.current.observe(element);
-      }
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el && observerRef.current) observerRef.current.observe(el);
     });
 
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
-    };
+    return () => observerRef.current?.disconnect();
   }, []);
 
-  // Fallback scroll-based detection
-  useEffect(() => {
-    const handleScrollDetection = () => {
-      const sections = ["hero", "services", "work", "contact", "insights"];
-      let current = "hero";
-      
-      const scrollPosition = window.scrollY + CONFIG.NAVBAR_HEIGHT + CONFIG.TOP_BAR_HEIGHT + 50;
-      
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const id = sections[i];
-        const element = document.getElementById(id);
-        
-        if (element) {
-          const offsetTop = element.offsetTop;
-          if (scrollPosition >= offsetTop) {
-            current = id;
-            break;
-          }
-        }
-      }
-      
-      setActiveSection(`#${current}`);
-    };
-    
-    let ticking = false;
-    const onScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          handleScrollDetection();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-    
-    window.addEventListener("scroll", onScroll, { passive: true });
-    handleScrollDetection();
-    
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Mobile scroll lock (improved)
   useEffect(() => {
     if (mobileOpen) {
       preventBodyScroll(true);
@@ -1360,20 +1247,17 @@ const Navbar = () => {
     };
   }, []);
 
-  // Resize handler (prevents layout shift)
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= CONFIG.MOBILE_BREAKPOINT) {
         setMobileOpen(false);
-        preventBodyScroll(false);
       }
     };
 
-    window.addEventListener("resize", debounce(handleResize, 150));
+    window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // ESC key handler
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
@@ -1392,7 +1276,7 @@ const Navbar = () => {
 
   const handleNavClick = useCallback((e, href) => {
     e.preventDefault();
-    scrollToElement(href, setMobileOpen);
+    scrollToElement(href);
   }, []);
 
   return (
@@ -1403,7 +1287,7 @@ const Navbar = () => {
 
       <nav
         aria-label="Main navigation"
-        className="navbar-main no-layout-shift"
+        className="navbar-main"
         style={{
           position: "fixed",
           top: `${CONFIG.TOP_BAR_HEIGHT}px`,
@@ -1426,12 +1310,11 @@ const Navbar = () => {
           style={{
             maxWidth: "1400px",
             margin: "0 auto",
-            padding: "0 clamp(12px, 4vw, 32px)",
+            padding: "0 clamp(1rem, 4vw, 2rem)",
             height: `${CONFIG.NAVBAR_HEIGHT}px`,
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            gap: "clamp(8px, 2vw, 16px)",
           }}
         >
           <a
@@ -1447,22 +1330,21 @@ const Navbar = () => {
           <div
             className="nav-desktop-links"
             style={{
-              display: "flex",
+              display: "none",
               alignItems: "center",
               gap: "clamp(2px, 0.5vw, 8px)",
-              flexWrap: "nowrap",
             }}
           >
             <NavLink
               label="Home"
               href="#hero"
-              isActive={activeSection === "#hero"}
+              isActive={activeSection}
               delay={55}
               onClick={() => setMobileOpen(false)}
             />
 
             <ServicesDropdown
-              isActive={activeSection === "#services"}
+              isActive={activeSection}
               onClick={() => {
                 scrollToElement("#services");
                 setMobileOpen(false);
@@ -1473,7 +1355,7 @@ const Navbar = () => {
             <NavLink
               label="Work"
               href="#work"
-              isActive={activeSection === "#work"}
+              isActive={activeSection}
               delay={165}
               onClick={() => setMobileOpen(false)}
             />
@@ -1481,7 +1363,7 @@ const Navbar = () => {
             <NavLink
               label="Contact"
               href="#contact"
-              isActive={activeSection === "#contact"}
+              isActive={activeSection}
               delay={220}
               onClick={() => setMobileOpen(false)}
             />
@@ -1489,7 +1371,7 @@ const Navbar = () => {
             <NavLink
               label="Insights"
               href="#insights"
-              isActive={activeSection === "#insights"}
+              isActive={activeSection}
               delay={275}
               onClick={() => setMobileOpen(false)}
             />
@@ -1499,7 +1381,7 @@ const Navbar = () => {
             <div
               className="nav-desktop-pill"
               style={{
-                display: "flex",
+                display: "none",
                 alignItems: "center",
                 gap: "7px",
                 padding: "6px 14px 6px 10px",
@@ -1520,7 +1402,7 @@ const Navbar = () => {
               />
               <span
                 style={{
-                  fontSize: "clamp(10px, 1.2vw, 11px)",
+                  fontSize: "clamp(10px, 1vw, 11px)",
                   fontWeight: 600,
                   color: B.emerald[500],
                   fontFamily: "'DM Sans', sans-serif",
@@ -1532,7 +1414,7 @@ const Navbar = () => {
               </span>
             </div>
 
-            <div className="nav-desktop-cta">
+            <div className="nav-desktop-cta" style={{ display: "none" }}>
               <CTAButton
                 href="#contact"
                 label="Get Started"
@@ -1541,26 +1423,28 @@ const Navbar = () => {
               />
             </div>
 
-            {/* MOBILE MENU TOGGLE */}
+            {/* MOBILE TOGGLE BUTTON */}
             <button
               className="nav-mobile-toggle"
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
-              onClick={() => setMobileOpen((prev) => !prev)}
+              onClick={() => setMobileOpen(prev => !prev)}
               style={{
-                display: "none",
+                display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 width: "44px",
                 height: "44px",
+                minWidth: "44px",
                 borderRadius: B.r.lg,
                 border: `1px solid ${B.blue[200]}50`,
                 background: B.surface,
                 cursor: "pointer",
-                transition: B.transition.default,
+                transition: "all 0.15s ease-out",
                 boxShadow: B.shadow.xs,
                 outline: "none",
-                flexShrink: 0,
+                touchAction: "manipulation",
+                WebkitTapHighlightColor: "transparent",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = B.blue[50];
@@ -1572,9 +1456,9 @@ const Navbar = () => {
               }}
             >
               {mobileOpen ? (
-                <X size={20} color={B.text2} strokeWidth={2.2} />
+                <X size={18} color={B.text2} strokeWidth={2.2} />
               ) : (
-                <Menu size={20} color={B.text2} strokeWidth={2.2} />
+                <Menu size={18} color={B.text2} strokeWidth={2.2} />
               )}
             </button>
           </div>
@@ -1592,10 +1476,11 @@ const Navbar = () => {
               inset: 0,
               top: `${CONFIG.TOP_BAR_HEIGHT + CONFIG.NAVBAR_HEIGHT}px`,
               zIndex: 45,
-              background: "rgba(11,17,32,0.5)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
+              background: "rgba(11,17,32,0.4)",
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
               animation: "nOverlayIn 0.2s ease both",
+              pointerEvents: mobileOpen ? "auto" : "none",
             }}
           />
 
@@ -1607,8 +1492,8 @@ const Navbar = () => {
             style={{
               position: "fixed",
               top: `calc(${CONFIG.TOP_BAR_HEIGHT + CONFIG.NAVBAR_HEIGHT}px + 8px)`,
-              left: "clamp(12px, 4vw, 24px)",
-              right: "clamp(12px, 4vw, 24px)",
+              left: "clamp(0.75rem, 4vw, 1.5rem)",
+              right: "clamp(0.75rem, 4vw, 1.5rem)",
               zIndex: 46,
               borderRadius: B.r["2xl"],
               background: B.surface,
@@ -1631,7 +1516,7 @@ const Navbar = () => {
                 className="mobile-tagline"
                 style={{
                   margin: "8px 0 0 0",
-                  fontSize: "clamp(11px, 3vw, 12px)",
+                  fontSize: "clamp(10px, 1.2vw, 11px)",
                   color: B.text4,
                   fontFamily: "'DM Sans', sans-serif",
                   lineHeight: 1.5,
@@ -1649,13 +1534,12 @@ const Navbar = () => {
                 gap: "2px",
                 flex: 1,
                 overflowY: "auto",
-                overflowX: "hidden",
               }}
             >
               <MobileLink
                 label="Home"
                 href="#hero"
-                isActive={activeSection === "#hero"}
+                isActive={activeSection}
                 delay={40}
                 onClick={handleMobileNav("#hero")}
               />
@@ -1669,7 +1553,7 @@ const Navbar = () => {
               <MobileLink
                 label="Work"
                 href="#work"
-                isActive={activeSection === "#work"}
+                isActive={activeSection}
                 delay={130}
                 onClick={handleMobileNav("#work")}
               />
@@ -1677,7 +1561,7 @@ const Navbar = () => {
               <MobileLink
                 label="Contact"
                 href="#contact"
-                isActive={activeSection === "#contact"}
+                isActive={activeSection}
                 delay={175}
                 onClick={handleMobileNav("#contact")}
               />
@@ -1685,7 +1569,7 @@ const Navbar = () => {
               <MobileLink
                 label="Insights"
                 href="#insights"
-                isActive={activeSection === "#insights"}
+                isActive={activeSection}
                 delay={220}
                 onClick={handleMobileNav("#insights")}
               />
@@ -1717,7 +1601,7 @@ const Navbar = () => {
               />
               <span
                 style={{
-                  fontSize: "clamp(11px, 3vw, 12px)",
+                  fontSize: "clamp(11px, 1.2vw, 12px)",
                   fontWeight: 600,
                   color: B.emerald[500],
                   fontFamily: "'DM Sans', sans-serif",
@@ -1757,13 +1641,11 @@ const Navbar = () => {
                   display: "flex",
                   alignItems: "center",
                   gap: "5px",
-                  fontSize: "clamp(11px, 3vw, 12px)",
+                  fontSize: "clamp(10px, 1.2vw, 11px)",
                   color: B.text4,
                   textDecoration: "none",
                   fontFamily: "'DM Sans', sans-serif",
                   transition: "color 0.2s ease",
-                  minHeight: "40px",
-                  padding: "4px 8px",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = B.blue[500];
@@ -1772,7 +1654,7 @@ const Navbar = () => {
                   e.currentTarget.style.color = B.text4;
                 }}
               >
-                <Phone size={12} />
+                <Phone size={11} />
                 <span className="mobile-contact-text">{CONFIG.CONTACT.PHONE}</span>
               </a>
               <span
@@ -1790,13 +1672,11 @@ const Navbar = () => {
                   display: "flex",
                   alignItems: "center",
                   gap: "5px",
-                  fontSize: "clamp(11px, 3vw, 12px)",
+                  fontSize: "clamp(10px, 1.2vw, 11px)",
                   color: B.text4,
                   textDecoration: "none",
                   fontFamily: "'DM Sans', sans-serif",
                   transition: "color 0.2s ease",
-                  minHeight: "40px",
-                  padding: "4px 8px",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = B.blue[500];
@@ -1805,7 +1685,7 @@ const Navbar = () => {
                   e.currentTarget.style.color = B.text4;
                 }}
               >
-                <Mail size={12} />
+                <Mail size={11} />
                 <span className="mobile-contact-text">{CONFIG.CONTACT.EMAIL_SHORT}</span>
               </a>
             </div>
@@ -1813,93 +1693,111 @@ const Navbar = () => {
         </>
       )}
 
-      {/* CLEAN RESPONSIVE BREAKPOINTS */}
+      {/* RESPONSIVE BREAKPOINTS */}
       <style>{`
-        /* Desktop Large (1400px+) */
         @media (min-width: 1400px) {
           .topbar-left, .topbar-right { display: flex !important; }
-          .topbar-center { display: flex !important; }
+          .topbar-center { display: none !important; }
           .nav-desktop-links { display: flex !important; }
-          .nav-desktop-cta { display: block !important; }
-          .nav-desktop-pill { display: flex !important; }
+          .nav-desktop-cta   { display: block !important; }
+          .nav-desktop-pill  { display: flex !important; }
           .nav-mobile-toggle { display: none !important; }
         }
 
-        /* Desktop (1200px - 1399px) */
-        @media (min-width: 1200px) and (max-width: 1399px) {
-          .topbar-left { display: flex !important; }
-          .topbar-right { display: flex !important; }
-          .topbar-center { display: flex !important; }
-          .nav-desktop-links { display: flex !important; }
-          .nav-desktop-cta { display: block !important; }
-          .nav-desktop-pill { display: flex !important; }
-          .nav-mobile-toggle { display: none !important; }
-        }
-
-        /* Desktop Small (1024px - 1199px) */
-        @media (min-width: 1024px) and (max-width: 1199px) {
+        @media (min-width: 1280px) and (max-width: 1399px) {
           .topbar-left, .topbar-right { display: flex !important; }
-          .topbar-center { display: flex !important; }
-          .nav-desktop-links { display: flex !important; gap: 0px !important; }
-          .nav-desktop-cta { display: block !important; }
-          .nav-desktop-pill { display: none !important; }
+          .topbar-center { display: none !important; }
+          .nav-desktop-links { display: flex !important; }
+          .nav-desktop-cta   { display: block !important; }
+          .nav-desktop-pill  { display: flex !important; }
           .nav-mobile-toggle { display: none !important; }
         }
 
-        /* Tablet Landscape (900px - 1023px) */
+        @media (min-width: 1024px) and (max-width: 1279px) {
+          .topbar-left, .topbar-right { display: flex !important; }
+          .topbar-center { display: none !important; }
+          .nav-desktop-links { display: flex !important; gap: 0px !important; }
+          .nav-desktop-cta   { display: block !important; }
+          .nav-desktop-pill  { display: none !important; }
+          .nav-mobile-toggle { display: none !important; }
+          .nav-desktop-links a { padding: 8px 12px !important; font-size: 12.5px !important; }
+        }
+
         @media (min-width: 900px) and (max-width: 1023px) {
           .topbar-left, .topbar-right { display: none !important; }
           .topbar-center { display: flex !important; }
           .nav-desktop-links { display: none !important; }
-          .nav-desktop-cta { display: none !important; }
-          .nav-desktop-pill { display: none !important; }
+          .nav-desktop-cta   { display: none !important; }
+          .nav-desktop-pill  { display: none !important; }
           .nav-mobile-toggle { display: flex !important; }
         }
 
-        /* Tablet Portrait (768px - 899px) */
         @media (min-width: 768px) and (max-width: 899px) {
           .topbar-left, .topbar-right { display: none !important; }
           .topbar-center { display: flex !important; }
           .nav-desktop-links { display: none !important; }
-          .nav-desktop-cta { display: none !important; }
-          .nav-desktop-pill { display: none !important; }
+          .nav-desktop-cta   { display: none !important; }
+          .nav-desktop-pill  { display: none !important; }
           .nav-mobile-toggle { display: flex !important; }
         }
 
-        /* Mobile Landscape (480px - 767px) */
         @media (min-width: 480px) and (max-width: 767px) {
           .topbar-left, .topbar-right { display: none !important; }
           .topbar-center { display: flex !important; }
           .nav-desktop-links { display: none !important; }
-          .nav-desktop-cta { display: none !important; }
-          .nav-desktop-pill { display: none !important; }
+          .nav-desktop-cta   { display: none !important; }
+          .nav-desktop-pill  { display: none !important; }
           .nav-mobile-toggle { display: flex !important; }
+          .nav-mobile-panel {
+            left: 1rem !important;
+            right: 1rem !important;
+          }
         }
 
-        /* Mobile Portrait (320px - 479px) */
         @media (max-width: 479px) {
           .topbar-left, .topbar-right { display: none !important; }
           .topbar-center { display: flex !important; }
           .nav-desktop-links { display: none !important; }
-          .nav-desktop-cta { display: none !important; }
-          .nav-desktop-pill { display: none !important; }
+          .nav-desktop-cta   { display: none !important; }
+          .nav-desktop-pill  { display: none !important; }
           .nav-mobile-toggle { display: flex !important; }
+          .nav-mobile-panel {
+            left: 0.75rem !important;
+            right: 0.75rem !important;
+            top: calc(40px + 72px + 6px) !important;
+          }
           .mobile-contact-footer {
             flex-direction: column !important;
             gap: 8px !important;
+            padding: 12px 16px 14px !important;
           }
           .mobile-contact-divider {
             display: none !important;
           }
         }
 
-        /* Extra Small (<320px) */
         @media (max-width: 319px) {
           .topbar-tagline {
-            font-size: 8px !important;
+            font-size: 9px !important;
+            letter-spacing: 0 !important;
+          }
+          .navbar-main div:first-child {
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
           }
           .mobile-contact-text {
-            font-size: 10px !important;
+            font-size: 9px !important;
+          }
+        }
+
+        @media print {
+          .topbar, .nav-mobile-toggle, .nav-desktop-cta {
+            display: none !important;
+          }
+          .navbar-main {
+            position: relative !important;
+            top: 0 !important;
+            border-bottom: 1px solid #000 !important;
           }
         }
       `}</style>
