@@ -1,26 +1,29 @@
 // pages/services/WebDevelopment.jsx
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { 
   Code, 
-  Globe, 
-  Smartphone, 
-  Zap, 
-  Shield, 
-  TrendingUp,
   ArrowRight,
   CheckCircle,
   Star,
   Users,
-  Clock,
-  Award,
+  Briefcase,
+  ChevronRight,
+  MessageCircle,
+  GraduationCap,
   Rocket,
+  Sparkles,
+  HeartHandshake,
+  Clock,
+  DollarSign,
+  Zap,
+  BarChart,
+  Shield,
+  TrendingUp,
+  Globe,
   Layout,
   Database,
-  Server,
-  Cloud,
-  Lock,
-  BarChart
+  Server
 } from "lucide-react";
 
 const WebDevelopment = () => {
@@ -28,109 +31,291 @@ const WebDevelopment = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  const [activeTab, setActiveTab] = useState("all");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    service: "",
+    message: ""
+  });
+
+  // Color mapping for Tailwind
+  const colorMap = {
+    blue: "bg-blue-50 text-blue-600",
+    green: "bg-green-50 text-green-600",
+    purple: "bg-purple-50 text-purple-600",
+    orange: "bg-orange-50 text-orange-600",
+    indigo: "bg-indigo-50 text-indigo-600",
+    teal: "bg-teal-50 text-teal-600"
+  };
+
+  // Industry-Standard Stats
+  const stats = [
+    { number: "50+", label: "Projects Delivered", icon: Briefcase, color: "blue" },
+    { number: "100+", label: "Business Clients", icon: Users, color: "green" },
+    { number: "4.8★", label: "Client Satisfaction", icon: Star, color: "orange" },
+    { number: "99%", label: "Project Success Rate", icon: TrendingUp, color: "purple" }
+  ];
+
+  // Professional Services Data
+  const services = [
+    {
+      id: 1,
+      title: "Web Development",
+      icon: Code,
+      description: "Custom, scalable web applications built for performance and growth",
+      price: "Starting from ₹15,000",
+      features: ["Responsive UI", "SEO Optimized", "High Performance", "Modern Tech Stack"],
+      popular: true,
+      color: "blue"
+    },
+    {
+      id: 2,
+      title: "Career Branding",
+      icon: Briefcase,
+      description: "Professional resumes and LinkedIn profiles designed for impact",
+      price: "Starting from ₹2,999",
+      features: ["ATS Optimized", "Keyword Strategy", "Professional Design", "LinkedIn Enhancement"],
+      popular: true,
+      color: "green"
+    },
+    {
+      id: 3,
+      title: "Custom Software Solutions",
+      icon: GraduationCap,
+      description: "Tailored solutions for academic and business requirements",
+      price: "Custom Pricing",
+      features: ["Full Source Code", "Documentation", "Deployment Support", "Consultation"],
+      popular: false,
+      color: "purple"
+    }
+  ];
+
+  // Portfolio Projects - Professional
+  const projects = [
+    {
+      id: 1,
+      title: "E-Commerce Platform",
+      category: "web",
+      client: "Retail Business",
+      description: "Scalable online store with payment gateway integration",
+      tech: ["React", "Node.js", "MongoDB", "Stripe"],
+      image: "https://images.unsplash.com/photo-1556742031-c6961e8560b0?w=600&h=400&fit=crop",
+      link: "/portfolio/ecommerce"
+    },
+    {
+      id: 2,
+      title: "Corporate Portal",
+      category: "web",
+      client: "Service Company",
+      description: "Enterprise-grade internal management system",
+      tech: ["Next.js", "PostgreSQL", "Tailwind", "Redis"],
+      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop",
+      link: "/portfolio/corporate-portal"
+    },
+    {
+      id: 3,
+      title: "Healthcare Dashboard",
+      category: "software",
+      client: "Healthcare Provider",
+      description: "Patient management and analytics platform",
+      tech: ["React", "Express", "MySQL", "D3.js"],
+      image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&h=400&fit=crop",
+      link: "/portfolio/healthcare"
+    },
+    {
+      id: 4,
+      title: "Portfolio Platform",
+      category: "web",
+      client: "Creative Professional",
+      description: "Modern portfolio showcasing creative work",
+      tech: ["Next.js", "Framer Motion", "Tailwind"],
+      image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&h=400&fit=crop",
+      link: "/portfolio/portfolio"
+    }
+  ];
+
+  // Professional Testimonials
+  const testimonials = [
+    {
+      id: 1,
+      name: "Rohit Sharma",
+      role: "Founder, TechStart Solutions",
+      content: "The web application they delivered exceeded our expectations. Professional, scalable, and well-documented.",
+      rating: 5,
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
+    },
+    {
+      id: 2,
+      name: "Priya Patel",
+      role: "HR Director, Global Corp",
+      content: "Their resume optimization service helped us identify top talent faster. Highly professional approach.",
+      rating: 5,
+      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop"
+    },
+    {
+      id: 3,
+      name: "Amit Kumar",
+      role: "CTO, Innovate Labs",
+      content: "Custom software solution that scaled perfectly with our growing business needs.",
+      rating: 5,
+      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop"
+    }
+  ];
+
+  // Professional FAQ
+  const faqs = [
+    {
+      q: "What is your development process?",
+      a: "We follow agile methodology with regular sprint reviews, ensuring transparency and timely delivery."
+    },
+    {
+      q: "Do you provide ongoing support?",
+      a: "Yes, we offer comprehensive post-launch support and maintenance packages."
+    },
+    {
+      q: "What technologies do you specialize in?",
+      a: "React, Node.js, Python, MongoDB, PostgreSQL, and modern cloud architecture."
+    },
+    {
+      q: "How do you ensure code quality?",
+      a: "We implement rigorous testing, code reviews, and performance optimization standards."
+    }
+  ];
+
+  const WHATSAPP_NUMBER = "919263066325";
+  const filteredProjects = activeTab === "all" ? projects : projects.filter(p => p.category === activeTab);
+
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Form submitted:", formData);
+    alert("Thank you! Our team will contact you within 24 hours.");
+    setFormData({ name: "", email: "", service: "", message: "" });
+  };
+
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white pt-32 pb-20 px-4">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="max-w-6xl mx-auto text-center relative">
-          <div className="inline-flex p-4 bg-white/10 backdrop-blur rounded-2xl mb-6">
-            <Code className="w-12 h-12" />
-          </div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Web Development
-          </h1>
-          <p className="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto mb-8">
-            Build modern, scalable web applications that drive business growth
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/contact"
-              className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 transition-all"
-            >
-              Start Your Project <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
-              to="/work"
-              className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur text-white px-8 py-3 rounded-full font-semibold hover:bg-white/20 transition-all"
-            >
-              View Our Work
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Hero Section - Professional Agency Level */}
+      <section className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 overflow-hidden">
+        <div className="absolute inset-0 bg-black/30"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+          <div className="max-w-3xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur rounded-full mb-6">
+              <Sparkles className="w-4 h-4 text-yellow-400" />
+              {/* Professional badge text */}
+              <span className="text-sm font-semibold text-white">
+                Trusted by Growing Businesses & Professionals
+              </span>
+            </div>
+            
+            {/* Professional Hero Heading */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 leading-tight">
+              Build Scalable
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 block mt-2">
+                Digital Products & Professional Brand Presence
+              </span>
+            </h1>
+            
+            {/* Professional Hero Paragraph */}
+            <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-2xl mx-auto mb-8 leading-relaxed">
+              We design and develop high-performance websites, professional resumes, 
+              and digital solutions that help businesses and individuals stand out 
+              in competitive markets.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link 
+                to="/contact" 
+                className="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-cyan-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-xl hover:scale-105 transition-all duration-300"
+              >
+                Start a Project 
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <a
+                href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hi!%20I'm%20interested%20in%20your%20professional%20services.`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center justify-center gap-2 border-2 border-white/30 text-white px-8 py-3 rounded-full font-semibold hover:bg-white/10 hover:scale-105 transition-all duration-300"
+              >
+                <MessageCircle className="w-4 h-4" />
+                Schedule a Consultation
+              </a>
+            </div>
 
-      {/* Trust Indicators */}
-      <section className="py-16 px-4 border-b border-slate-100">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { number: "150+", label: "Projects Delivered", icon: Code },
-              { number: "98%", label: "Client Satisfaction", icon: Star },
-              { number: "50+", label: "Expert Developers", icon: Users },
-              { number: "24/7", label: "Technical Support", icon: Clock },
-            ].map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">{stat.number}</div>
-                <div className="text-slate-600 text-sm md:text-base">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Services Overview */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Comprehensive Web Solutions
-            </h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              End-to-end web development services tailored to your business needs
+            {/* Professional Bottom Line */}
+            <p className="text-sm text-gray-400 mt-6">
+              ⚡ High Performance • 🚀 Scalable Solutions • 🎯 Results-Driven Approach
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                icon: Globe,
-                title: "Frontend Development",
-                desc: "Modern, responsive interfaces using React, Next.js, Vue.js, and Angular"
-              },
-              {
-                icon: Server,
-                title: "Backend Development",
-                desc: "Robust server-side solutions with Node.js, Python, Java, and PHP"
-              },
-              {
-                icon: Database,
-                title: "Database Architecture",
-                desc: "Optimized data management with MongoDB, PostgreSQL, and MySQL"
-              },
-              {
-                icon: Shield,
-                title: "Security Implementation",
-                desc: "Enterprise-grade security with SSL, encryption, and authentication"
-              },
-              {
-                icon: Zap,
-                title: "Performance Optimization",
-                desc: "Lightning-fast load times and Core Web Vitals optimization"
-              },
-              {
-                icon: Smartphone,
-                title: "Responsive Design",
-                desc: "Flawless experience across all devices and screen sizes"
-              }
-            ].map((service, index) => {
+        </div>
+      </section>
+
+      {/* Stats Section - Professional */}
+      <section className="py-12 bg-white border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((stat, i) => {
+              const Icon = stat.icon;
+              return (
+                <div key={i} className="text-center group">
+                  <div className={`inline-flex p-3 rounded-xl mb-3 ${colorMap[stat.color]} group-hover:scale-110 transition-transform`}>
+                    <Icon className="w-6 h-6" />
+                  </div>
+                  <div className="text-2xl md:text-3xl font-bold text-gray-900 mb-1">{stat.number}</div>
+                  <div className="text-sm text-gray-500">{stat.label}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section - Professional */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Enterprise Solutions
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Scalable, performance-driven solutions for modern business challenges
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {services.map((service) => {
               const Icon = service.icon;
               return (
-                <div key={index} className="group p-6 bg-white border border-slate-100 rounded-xl hover:shadow-lg transition-all hover:border-blue-200">
-                  <div className="inline-flex p-3 bg-blue-50 rounded-lg mb-4 group-hover:bg-blue-100 transition-colors">
-                    <Icon className="w-6 h-6 text-blue-600" />
+                <div key={service.id} className="bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all group border border-gray-100">
+                  <div className={`w-12 h-12 ${colorMap[service.color]} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                    <Icon className="w-6 h-6" />
                   </div>
-                  <h3 className="text-xl font-semibold text-slate-900 mb-2">{service.title}</h3>
-                  <p className="text-slate-600 leading-relaxed">{service.desc}</p>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{service.title}</h3>
+                  <p className="text-gray-600 text-sm mb-3">{service.description}</p>
+                  <div className="text-2xl font-bold text-blue-600 mb-4">{service.price}</div>
+                  {service.popular && (
+                    <span className="inline-block px-2 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full mb-3">
+                      Most Requested
+                    </span>
+                  )}
+                  <ul className="space-y-2 mb-4">
+                    {service.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-center gap-2 text-sm text-gray-600">
+                        <CheckCircle className="w-4 h-4 text-green-500" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link 
+                    to="/contact"
+                    className="inline-flex items-center gap-1 text-blue-600 font-semibold text-sm hover:gap-2 transition-all"
+                  >
+                    Request Proposal <ChevronRight className="w-3 h-3" />
+                  </Link>
                 </div>
               );
             })}
@@ -138,330 +323,320 @@ const WebDevelopment = () => {
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="py-20 px-4 bg-slate-50">
-        <div className="max-w-6xl mx-auto">
+      {/* Portfolio Section - Professional */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Why Industry Leaders Choose Us
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Featured Work
             </h2>
-            <p className="text-lg text-slate-600">
-              Delivering excellence through expertise and dedication
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Proven solutions delivering measurable business impact
             </p>
           </div>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="space-y-4">
-              {[
-                "15+ years of industry experience",
-                "Agile development methodology",
-                "Free technical consultation",
-                "Post-launch support & maintenance",
-                "SEO-optimized code structure",
-                "Latest technology stack"
-              ].map((item, index) => (
-                <div key={index} className="flex items-center gap-3 bg-white p-4 rounded-lg">
-                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                  <span className="text-slate-700">{item}</span>
-                </div>
-              ))}
-            </div>
-            <div className="space-y-4">
-              {[
-                "100% client satisfaction guarantee",
-                "On-time delivery commitment",
-                "Transparent communication",
-                "Competitive pricing structure",
-                "Scalable solutions",
-                "Dedicated project manager"
-              ].map((item, index) => (
-                <div key={index} className="flex items-center gap-3 bg-white p-4 rounded-lg">
-                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                  <span className="text-slate-700">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Development Process */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Our Development Process
-            </h2>
-            <p className="text-lg text-slate-600">
-              A streamlined approach to deliver quality software
-            </p>
-          </div>
-          <div className="grid md:grid-cols-4 gap-6">
-            {[
-              { 
-                step: "01", 
-                title: "Discovery", 
-                desc: "Requirements gathering & project planning",
-                icon: Users
-              },
-              { 
-                step: "02", 
-                title: "Design", 
-                desc: "Wireframes, prototypes & UI/UX design",
-                icon: Layout
-              },
-              { 
-                step: "03", 
-                title: "Development", 
-                desc: "Agile sprints & continuous development",
-                icon: Code
-              },
-              { 
-                step: "04", 
-                title: "Launch", 
-                desc: "Testing, deployment & ongoing support",
-                icon: Rocket
-              }
-            ].map((process, index) => {
-              const Icon = process.icon;
-              return (
-                <div key={index} className="text-center group">
-                  <div className="relative mb-4">
-                    <div className="w-20 h-20 mx-auto bg-blue-50 rounded-full flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                      <Icon className="w-8 h-8 text-blue-600" />
-                    </div>
-                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                      {process.step}
-                    </div>
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">{process.title}</h3>
-                  <p className="text-slate-600">{process.desc}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Technology Stack */}
-      <section className="py-20 px-4 bg-slate-50">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Cutting-Edge Technology Stack
-            </h2>
-            <p className="text-lg text-slate-600">
-              We use the latest technologies to build future-proof applications
-            </p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {[
-              "React", "Next.js", "Node.js", "Python", "Django",
-              "Laravel", "Vue.js", "Angular", "MongoDB", "PostgreSQL",
-              "MySQL", "Tailwind CSS", "TypeScript", "GraphQL", "AWS",
-              "Docker", "Kubernetes", "Redis", "Elasticsearch", "Firebase"
-            ].map((tech, index) => (
-              <div key={index} className="bg-white border border-slate-200 rounded-lg p-3 text-center hover:border-blue-400 hover:shadow-md transition-all">
-                <span className="text-slate-700 text-sm font-medium">{tech}</span>
-              </div>
+          {/* Filter Tabs */}
+          <div className="flex justify-center gap-3 mb-10">
+            {["all", "web", "software"].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-6 py-2 rounded-full font-semibold transition-all ${
+                  activeTab === tab
+                    ? "bg-blue-600 text-white shadow-md"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                {tab === "all" ? "All Projects" : tab === "web" ? "Web Applications" : "Software Solutions"}
+              </button>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* Industry Solutions */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Industry Solutions
-            </h2>
-            <p className="text-lg text-slate-600">
-              Specialized web solutions for various industries
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                icon: BarChart,
-                title: "E-commerce",
-                desc: "Scalable online stores with payment integration",
-                industries: ["Retail", "Fashion", "Electronics"]
-              },
-              {
-                icon: Users,
-                title: "Healthcare",
-                desc: "HIPAA compliant patient portals & telemedicine",
-                industries: ["Hospitals", "Clinics", "Pharmacies"]
-              },
-              {
-                icon: Globe,
-                title: "Education",
-                desc: "LMS platforms & online learning systems",
-                industries: ["Universities", "Schools", "EdTech"]
-              },
-              {
-                icon: Cloud,
-                title: "FinTech",
-                desc: "Secure financial dashboards & payment systems",
-                industries: ["Banks", "Insurance", "Investment"]
-              },
-              {
-                icon: Lock,
-                title: "Real Estate",
-                desc: "Property listing platforms with VR tours",
-                industries: ["Agencies", "Builders", "Property Management"]
-              },
-              {
-                icon: TrendingUp,
-                title: "SaaS",
-                desc: "Subscription-based software platforms",
-                industries: ["Startups", "Enterprise", "B2B"]
-              }
-            ].map((solution, index) => {
-              const Icon = solution.icon;
-              return (
-                <div key={index} className="bg-white border border-slate-100 rounded-xl p-6 hover:shadow-lg transition-all">
-                  <div className="inline-flex p-3 bg-blue-50 rounded-lg mb-4">
-                    <Icon className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">{solution.title}</h3>
-                  <p className="text-slate-600 mb-3">{solution.desc}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {solution.industries.map((industry, idx) => (
-                      <span key={idx} className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">
-                        {industry}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {filteredProjects.map((project) => (
+              <div key={project.id} className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all border border-gray-100">
+                <div className="h-48 overflow-hidden">
+                  <img 
+                    src={project.image} 
+                    alt={project.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="p-4">
+                  <div className="text-xs text-blue-600 font-semibold mb-1">{project.client}</div>
+                  <h3 className="font-bold text-gray-900 mb-1">{project.title}</h3>
+                  <p className="text-gray-600 text-xs mb-2">{project.description}</p>
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    {project.tech.slice(0, 2).map((tech, idx) => (
+                      <span key={idx} className="px-1.5 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
+                        {tech}
                       </span>
                     ))}
                   </div>
+                  <Link to={project.link} className="inline-flex items-center gap-1 text-blue-600 text-xs font-semibold hover:gap-2 transition-all">
+                    Case Study <ChevronRight className="w-3 h-3" />
+                  </Link>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Client Success Stories */}
-      <section className="py-20 px-4 bg-slate-50">
-        <div className="max-w-6xl mx-auto">
+      {/* Why Choose Us - Professional */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Why Partner With Us
+              </h2>
+              {/* Professional intro text */}
+              <p className="text-lg text-gray-600 mb-8">
+                We focus on delivering scalable, high-quality solutions aligned with real-world business needs.
+              </p>
+              <div className="space-y-4">
+                {/* Professional value propositions */}
+                {[
+                  { icon: Clock, title: "Timely Delivery", desc: "Structured workflow ensuring on-time project completion" },
+                  { icon: DollarSign, title: "Value-Driven Pricing", desc: "Transparent pricing aligned with quality delivery" },
+                  { icon: CheckCircle, title: "Quality Assurance", desc: "Thorough testing and performance optimization" },
+                  { icon: HeartHandshake, title: "Dedicated Support", desc: "Reliable support throughout your project lifecycle" }
+                ].map((item, i) => {
+                  const Icon = item.icon;
+                  return (
+                    <div key={i} className="flex items-start gap-3">
+                      <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Icon className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">{item.title}</h3>
+                        <p className="text-gray-600 text-sm">{item.desc}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white">
+              <div className="text-center">
+                <div className="text-5xl mb-4">⭐ 4.8</div>
+                <div className="text-lg mb-2">Client Satisfaction Rating</div>
+                <div className="text-sm text-blue-100">Based on 100+ project reviews</div>
+                <div className="mt-6 pt-6 border-t border-blue-400">
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">50+</div>
+                      <div className="text-xs text-blue-100">Projects</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">100+</div>
+                      <div className="text-xs text-blue-100">Clients</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">99%</div>
+                      <div className="text-xs text-blue-100">Success Rate</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials - Professional */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Client Success Stories
             </h2>
-            <p className="text-lg text-slate-600">
-              Trusted by businesses worldwide
+            {/* Professional testimonial subtitle */}
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Trusted by professionals, startups, and growing businesses
             </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                quote: "The team delivered an exceptional web platform that transformed our business operations.",
-                author: "Rahul Sharma",
-                position: "CEO, TechStart India",
-                rating: 5
-              },
-              {
-                quote: "Professional, responsive, and technically excellent. Highly recommended for web development.",
-                author: "Priya Patel",
-                position: "CTO, Innovate Solutions",
-                rating: 5
-              },
-              {
-                quote: "Outstanding work ethic and technical expertise. They exceeded our expectations.",
-                author: "Amit Kumar",
-                position: "Director, DigitalEdge",
-                rating: 5
-              }
-            ].map((testimonial, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
-                <div className="flex gap-1 mb-4">
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial) => (
+              <div key={testimonial.id} className="bg-gray-50 rounded-xl p-6 hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-3 mb-4">
+                  <img 
+                    src={testimonial.avatar}
+                    alt={testimonial.name}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  <div>
+                    <h3 className="font-semibold text-gray-900">{testimonial.name}</h3>
+                    <p className="text-xs text-gray-500">{testimonial.role}</p>
+                  </div>
+                </div>
+                <div className="flex gap-0.5 mb-3">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                <p className="text-slate-600 mb-4 italic">"{testimonial.quote}"</p>
-                <div>
-                  <p className="font-semibold text-slate-900">{testimonial.author}</p>
-                  <p className="text-sm text-slate-500">{testimonial.position}</p>
+                <p className="text-gray-600 text-sm italic leading-relaxed">"{testimonial.content}"</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section - Professional */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Let's Discuss Your Project
+              </h2>
+              <p className="text-lg text-gray-600 mb-6">
+                Schedule a consultation to explore how we can help achieve your business goals.
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                    <MessageCircle className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">WhatsApp Business</p>
+                    <p className="font-semibold text-gray-900">+91 92630 66325</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                    <Clock className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Response Time</p>
+                    <p className="font-semibold text-gray-900">Within 24 business hours</p>
+                  </div>
                 </div>
               </div>
-            ))}
+            </div>
+
+            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Full Name"
+                  />
+                </div>
+                <div>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Email Address"
+                  />
+                </div>
+                <div>
+                  <select
+                    name="service"
+                    value={formData.service}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Service</option>
+                    <option value="web">Web Development</option>
+                    <option value="resume">Career Branding</option>
+                    <option value="software">Custom Software</option>
+                  </select>
+                </div>
+                <div>
+                  <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    rows="4"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Project Requirements"
+                  ></textarea>
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
+                >
+                  Submit Inquiry
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto">
+      {/* FAQ Section - Professional */}
+      <section className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Frequently Asked Questions
             </h2>
-            <p className="text-lg text-slate-600">
-              Everything you need to know about our web development services
+            <p className="text-lg text-gray-600">
+              Everything you need to know about working with us
             </p>
           </div>
+
           <div className="space-y-4">
-            {[
-              { 
-                q: "How long does it take to build a website?", 
-                a: "Development time typically ranges from 4-12 weeks depending on project complexity, features, and requirements. We'll provide a detailed timeline during consultation." 
-              },
-              { 
-                q: "Do you provide ongoing maintenance?", 
-                a: "Yes, we offer flexible maintenance packages including security updates, performance monitoring, bug fixes, and technical support." 
-              },
-              { 
-                q: "Will my website be mobile-friendly?", 
-                a: "Absolutely! All our websites are built with a mobile-first approach and are fully responsive across all devices and screen sizes." 
-              },
-              { 
-                q: "Do you help with website hosting?", 
-                a: "Yes, we can help you choose the best hosting provider and handle the setup. We also offer managed hosting services." 
-              },
-              { 
-                q: "What about SEO and performance?", 
-                a: "We build SEO-optimized websites following best practices for speed, Core Web Vitals, and search engine visibility." 
-              },
-              { 
-                q: "Do you offer custom features and integrations?", 
-                a: "Yes, we specialize in custom development including third-party integrations, APIs, and unique functionality tailored to your needs." 
-              }
-            ].map((faq, index) => (
-              <div key={index} className="bg-white border border-slate-100 rounded-xl p-6 hover:shadow-md transition-all">
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">{faq.q}</h3>
-                <p className="text-slate-600 leading-relaxed">{faq.a}</p>
+            {faqs.map((faq, i) => (
+              <div key={i} className="bg-gray-50 rounded-xl p-6 hover:shadow-sm transition-shadow">
+                <h3 className="font-semibold text-gray-900 mb-2">{faq.q}</h3>
+                <p className="text-gray-600">{faq.a}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-blue-700">
-        <div className="max-w-4xl mx-auto text-center text-white">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to Build Your Next Web Project?
+      {/* Final CTA - Professional */}
+      <section className="py-20 bg-gradient-to-r from-blue-600 to-indigo-700">
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <Rocket className="w-16 h-16 mx-auto mb-6 text-white/80" />
+          {/* Professional CTA Heading */}
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+            Let's Build Something Impactful Together
           </h2>
+          {/* Professional CTA Paragraph */}
           <p className="text-lg text-blue-100 mb-8 max-w-2xl mx-auto">
-            Get a free consultation with our technical experts. No obligation, just honest advice.
+            Partner with us to create high-quality digital solutions that drive growth, 
+            visibility, and long-term success.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/contact"
-              className="inline-flex items-center justify-center gap-2 bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:shadow-lg transition-all"
+              className="inline-flex items-center justify-center gap-2 bg-white text-blue-700 px-8 py-3 rounded-full font-semibold hover:shadow-xl hover:scale-105 transition-all duration-300"
             >
-              Schedule Consultation <ArrowRight className="w-4 h-4" />
+              Start a Conversation
+              <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link
-              to="/work"
-              className="inline-flex items-center justify-center gap-2 bg-blue-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-400 transition-all"
+            <a
+              href={`https://wa.me/${WHATSAPP_NUMBER}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 bg-green-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-700 hover:scale-105 transition-all duration-300"
             >
-              View Case Studies
-            </Link>
+              <MessageCircle className="w-4 h-4" />
+              WhatsApp Inquiry
+            </a>
           </div>
-          <p className="text-sm text-blue-200 mt-6">
-            Free consultation • No hidden costs • 30-minute discovery call
-          </p>
+          {/* Professional Bottom Tags */}
+          <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-blue-200">
+            <span>⚡ Performance Focused</span>
+            <span>🚀 Scalable Architecture</span>
+            <span>🎯 Business-Oriented Approach</span>
+            <span>📞 Dedicated Support</span>
+          </div>
         </div>
       </section>
     </div>
